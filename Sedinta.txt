@@ -1,0 +1,5 @@
+Sedinta.txt
+
+Parolele de unde apar? Ele nu sunt in DB.
+
+De verificat functionalitatea site-ului pe MAC 
