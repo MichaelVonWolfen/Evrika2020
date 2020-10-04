@@ -1,12 +1,10 @@
-var express = require('express');
+const express = require('express');
 
-var app = express();
+const app = express();
 
-var http = require('http').createServer(app);
+const http = require('http').createServer(app);
 
-var io = require("socket.io")(http);
-
-
+const io = require("socket.io")(http);
 
 
 http.listen(4000, () =>{
