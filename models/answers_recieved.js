@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   answers_recieved.init({
     team_id: DataTypes.INTEGER,
     answer_id: DataTypes.INTEGER,
-    total_time: DataTypes.FLOAT
+    total_time: DataTypes.DATE
   }, {
     sequelize,
     modelName: 'answers_recieved',

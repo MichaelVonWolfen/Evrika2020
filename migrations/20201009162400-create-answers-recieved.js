@@ -10,21 +10,23 @@ module.exports = {
       },
       team_id: {
         type: Sequelize.INTEGER,
-        references:{model:'users', key:'id'}
+        references:{model:'teams', key:'id'}
       },
       answer_id: {
         type: Sequelize.INTEGER,
-        references: {model: 'answers', key: 'id'}
+        references: {model:'answers', key: 'id'}
       },
       total_time: {
-        type: Sequelize.FLOAT
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
+        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
+        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       }
     });
