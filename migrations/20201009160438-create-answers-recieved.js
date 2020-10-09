@@ -14,12 +14,17 @@ module.exports = {
       answer_id: {
         type: Sequelize.INTEGER
       },
+      total_time: {
+        type: Sequelize.FLOAT
+      },
       createdAt: {
         allowNull: false,
+        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
+        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       }
     });

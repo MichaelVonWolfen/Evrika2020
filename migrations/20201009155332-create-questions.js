@@ -15,14 +15,17 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       times_played: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        defaultValue:0
       },
       createdAt: {
         allowNull: false,
+        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
+        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       }
     });

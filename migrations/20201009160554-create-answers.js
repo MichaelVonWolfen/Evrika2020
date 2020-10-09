@@ -11,12 +11,21 @@ module.exports = {
       answer: {
         type: Sequelize.STRING
       },
+      question_id: {
+        type: Sequelize.INTEGER
+      },
+      is_correct: {
+        type: Sequelize.BOOLEAN,
+        defaultValue:0
+      },
       createdAt: {
         allowNull: false,
+        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
+        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       }
     });
