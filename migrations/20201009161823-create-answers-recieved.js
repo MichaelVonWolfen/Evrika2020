@@ -9,22 +9,22 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       team_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references:{model:'users', key:'id'}
       },
       answer_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {model: 'answers', key: 'id'}
       },
       total_time: {
         type: Sequelize.FLOAT
       },
       createdAt: {
         allowNull: false,
-        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        defaultValue:Sequelize.NOW,
         type: Sequelize.DATE
       }
     });

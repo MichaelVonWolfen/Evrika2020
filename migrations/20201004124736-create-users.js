@@ -27,7 +27,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       team_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references:{model: 'teams', key: 'id'}
       },
       is_active: {
         type: Sequelize.BOOLEAN,

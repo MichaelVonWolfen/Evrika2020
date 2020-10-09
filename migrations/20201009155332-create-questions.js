@@ -12,7 +12,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       question_type: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references:{model: 'question_types', key: 'id'}
       },
       times_played: {
         type: Sequelize.INTEGER,
