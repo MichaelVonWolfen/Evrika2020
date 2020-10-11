@@ -49,13 +49,13 @@ async function get_Question() {
     console.log(id);
     console.log(question);
     console.log(played_times);
-    const [answers] = await promisePool.query(`Select id, answer from answers where question_id = ${id};`);
+    const [answers] = await promisePool.query(`Select id, answer from answers where question_id = ${id} order by rand()`);
     let question_JSON = {
                             'id' : id,
                             'question': question,
                             'answers': answers
                         };
-    await promisePool.query(`UPDATE questions set times_played = ${played_times + 1} where id = ${id};`);
+    await promisePool.query(`UPDATE questions set times_played = ${played_times + 1} where id = ${id}`);
     return question_JSON;
 
 }
