@@ -9,16 +9,21 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       first_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull:false
       },
       last_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull:false
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        allowNull:false,
+        unique:true
       },
       password: {
-        type: Sequelize.STRING(1000)
+        type: Sequelize.STRING(1000),
+        allowNull:false
       },
       phone: {
         type: Sequelize.STRING(16)
