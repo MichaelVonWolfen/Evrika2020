@@ -2,10 +2,6 @@
   "name": "evrika_finala",
   "version": "1.0.0",
   "description": "",
-  "repository": {
-    "url": "https://github.com/LSAC-ONG/Evrika2020_finala",
-
-  },
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

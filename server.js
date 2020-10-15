@@ -155,6 +155,12 @@ function ExtractUser(res){
 app.get('/style.css', function(req, res) {
     res.sendFile(__dirname + "/views/css/" + "style.css");
 });
+app.get('/style_bad.css', function(req, res) {
+    res.sendFile(__dirname + "/views/css/" + "style_bad.css");
+});
+app.get('/chat.js', function(req, res) {
+    res.sendFile(__dirname + "/views/js/" + "chat.js");
+});
 app.get('*', function(req, res){
     res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
 })
