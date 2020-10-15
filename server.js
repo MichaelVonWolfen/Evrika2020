@@ -10,6 +10,11 @@ const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
 
+const server = app.listen(3000, ()=>{
+    console.log("Listening on *:3000")
+})
+const io = require("socket.io")(server);
+
 const mysql = require('mysql2');
 const pool = mysql.createPool(
     {
@@ -102,6 +107,16 @@ app.delete('/logout', async (req, res) => {
     req.logOut()
     res.redirect('/')
 })
+app.get('/style.css', function(req, res) {
+    res.sendFile(__dirname + "/views/css/" + "style.css");
+});
+app.get('/style_bad.css', function(req, res) {
+    res.sendFile(__dirname + "/views/css/" + "style_bad.css");
+});
+app.get('/chat.js', function(req, res) {
+    res.sendFile(__dirname + "/views/js/" + "chat.js");
+});
+
 function checkAuthenticated(req, res, next){
     if(req.isAuthenticated()){
         return next()
@@ -152,15 +167,52 @@ function ExtractUser(res){
     }
     return user;
 }
-app.get('/style.css', function(req, res) {
-    res.sendFile(__dirname + "/views/css/" + "style.css");
+async function get_Question() {
+    // create the pool
+    // now get a Promise wrapped instance of that pool
+    const promisePool = pool.promise();
+    // query database using promises
+    const [quest] = await promisePool.query("select id, question, times_played from  questions\n" +
+        "where times_played like (select min(times_played) from questions)\n" +
+        "order by RAND()\n" +
+        "limit 1;");
+    let id = quest[0]['id']
+    let question = quest[0]['question']
+    let played_times = quest[0]['times_played']
+
+    const [answers] = await promisePool.query(`Select id, answer from answers where question_id = ${id} order by rand()`);
+    let question_JSON = {
+        'id' : id,
+        'question': question,
+        'answers': answers
+    };
+    await promisePool.query(`UPDATE questions set times_played = ${played_times + 1} where id = ${id}`);
+    return question_JSON;
+
+}
+// Socket IO LOGIC
+app.get('/questions', (req, res) => {
+    res.render('questions_room.ejs')
+})
+io.on('connection', (socket) =>{
+    console.log("User connected")
+
+    socket.on('message', (msg)=>{
+        console.log(msg);
+    });
+    socket.on('question', (msg)=>{
+        get_Question().then(r => io.emit('rasp',r));
+
+    });
+
+    socket.on('disconnect', () => {
+        console.log('user disconnected');
+    });
 });
-app.get('/style_bad.css', function(req, res) {
-    res.sendFile(__dirname + "/views/css/" + "style_bad.css");
-});
-app.get('/chat.js', function(req, res) {
-    res.sendFile(__dirname + "/views/js/" + "chat.js");
-});
+//END of SOCKET.IO Logic
+
+
+//MUST be placed always at the end
 app.get('*', function(req, res){
     res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
 })
@@ -168,4 +220,3 @@ app.post('*', (req, res) => {
     res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
 })
 
-app.listen(3000)
