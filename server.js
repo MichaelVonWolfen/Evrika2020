@@ -191,7 +191,7 @@ async function get_Question() {
 
 }
 // Socket IO LOGIC
-app.get('/questions', (req, res) => {
+app.get('/questions', checkAuthenticated, (req, res) => {
     res.render('questions_room.ejs')
 })
 io.on('connection', (socket) =>{
@@ -212,7 +212,8 @@ io.on('connection', (socket) =>{
 //END of SOCKET.IO Logic
 
 
-//MUST be placed always at the end
+// MUST be placed always at the end
+
 app.get('*', function(req, res){
     res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
 })
