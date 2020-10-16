@@ -1,6 +1,7 @@
 if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
+const port = 3000;
 const path = require('path')
 const express = require('express')
 const app = express()
@@ -10,9 +11,7 @@ const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
 
-const server = app.listen(3000, ()=>{
-    console.log("Listening on *:3000")
-})
+const server =require("http").createServer(app);
 const io = require("socket.io")(server);
 
 const mysql = require('mysql2');
@@ -51,7 +50,7 @@ app.use(methodOverride('_method'))
 app.get('/',checkAuthenticated, async (req, res) => {
     const user = await req.user
     res.render('index.ejs', {name: user.full_name})
-    console.log(user)
+    // console.log(user)
 })
 
 app.get('/login',checkNotAuthenticated, (req, res) => {
@@ -113,10 +112,12 @@ app.get('/style.css', function(req, res) {
 app.get('/style_bad.css', function(req, res) {
     res.sendFile(__dirname + "/views/css/" + "style_bad.css");
 });
-app.get('/chat.js', function(req, res) {
-    res.sendFile(__dirname + "/views/js/" + "chat.js");
+app.get('/admin.js', function(req, res) {
+    res.sendFile(__dirname + "/views/js/" + "admin.js");
 });
-
+app.get('/user.js', function(req, res) {
+    res.sendFile(__dirname + "/views/js/" + "user.js");
+});
 function checkAuthenticated(req, res, next){
     if(req.isAuthenticated()){
         return next()
@@ -191,27 +192,58 @@ async function get_Question() {
 
 }
 // Socket IO LOGIC
-app.get('/questions', checkAuthenticated, (req, res) => {
-    res.render('questions_room.ejs')
+const workspaces = io.of("/" + /^\/\w+$/);
+workspaces.on('connection', socket => {
+    const workspace = socket.nsp;
+    workspace.on('connection', socket =>{
+        console.log(socket.conn.id)
+        console.log(socket._rooms)
+    })
+
+});
+app.get('/user', checkAuthenticated, async (req, res) => {
+    let user = await req.user
+    let nsp = req.query.namespace
+    if(user.role !== 'ROLE_USER'){
+        res.redirect('/')
+    }
+    else{
+        res.render('user_room.ejs',{user: user.full_name, namespace:nsp})
+    }
 })
+app.get('/admin', checkAuthenticated, async (req, res) => {
+    let user = await req.user
+    let nsp = req.query.namespace
+    if(!nsp)
+        nsp = Date.now() + user.id + Math.floor(Math.random() * 10);
+
+    if(user.role !== 'ROLE_ADMIN'){
+        res.redirect('/user')
+    }
+    else{
+        res.render('admin_room.ejs', {namespace: nsp})
+    }
+})
+
 io.on('connection', (socket) =>{
-    console.log("User connected")
+    console.log(`User connected with id ${socket.conn.id}`)
 
-    socket.on('message', (msg)=>{
-        console.log(msg);
-    });
-    socket.on('question', (msg)=>{
-        get_Question().then(r => io.emit('rasp',r));
+    // socket.on('message', (msg)=> {
+    //     console.log(msg);
+    // });
+    // socket.on('question', (msg)=>{
+    //     get_Question().then(r => io.emit('rasp',r));
+    //
 
-    });
+    // });
 
     socket.on('disconnect', () => {
-        console.log('user disconnected');
+        console.log(`user with id ${socket.conn.id} disconnected`);
     });
 });
-//END of SOCKET.IO Logic
-
-
+// END of SOCKET.IO Logic
+//
+//
 // MUST be placed always at the end
 
 app.get('*', function(req, res){
@@ -221,3 +253,6 @@ app.post('*', (req, res) => {
     res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
 })
 
+server.listen(port, () => {
+    console.log(`application is running at: http://localhost:${port}`);
+});

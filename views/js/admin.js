@@ -1,4 +1,4 @@
-const socket = io();
+const socket = io('/' + $('namespace').val());
 var idQuestion;
 
 $('#question').click(function(){

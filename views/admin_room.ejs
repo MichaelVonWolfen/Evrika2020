@@ -8,11 +8,14 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
         </head>
   <body>
+        <h1>Room:<%=namespace%></h1>
         <h2 id="question_c"></h2>
+        <a href="http://localhost:3000/user?namespace=<%= namespace %>">http://localhost:3000/user?namespace=<%= namespace %></a>
+        <input type="hidden" value="<%= namespace %>" id="namespace">
         <form action="">
         </form>
-        <input type="submit" value="Intrebare" id = 'question'>
+        <input type="submit" value="Intrebare" id = 'question' >
 
-        <script src="/chat.js"></script>
+        <script src="/admin.js"></script>
     </body>
     </html>
