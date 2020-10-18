@@ -9,13 +9,45 @@
         </head>
   <body>
         <h1>Room:<%=namespace%></h1>
-        <h2 id="question_c"></h2>
-        <a href="http://localhost:3000/user?namespace=<%= namespace %>">http://localhost:3000/user?namespace=<%= namespace %></a>
+        <h2 id="question">Intrebarea</h2>
         <input type="hidden" value="<%= namespace %>" id="namespace">
-        <form action="">
-        </form>
-        <input type="submit" value="Intrebare" id = 'question' >
-
+        <input type="hidden" value="<%= pid %>" id="pid">
+        
+        <!--        <input type="submit" value="Obtine Intrebare" id = 'question' >-->
+        <div>
+            <button id="nature">Stiinte ale naturii</button>
+            <button id="quotes">Citate celebre</button>
+            <button id="social">Social Media</button>
+            <button id="movies">Filme si seriale</button>
+            <button id="facts">Fun facts</button>
+            <button id="history">Istorie</button>
+            <button id="geo">Geografie</button>
+            <button id="romanian">Limba si Literarura Romana</button>
+            <button id="music">Muzica</button>
+            <button id="sport">Sport</button>
+        </div>
+        <button id="sendToPlayers">Send</button>
+        <button id="correctAnswer">Correct Answer</button>
+        <button id="startSession">Runda Noua</button>
+        <div>
+            <p id="team_1">Team Name</p>
+            <p>Member 1:</p>
+            <p id="member_11" name = "123" class="king">Teammate1</p>
+            <p>Member 2:</p>
+            <p id="member_12" name = "124">Teammate2</p>
+        </div>
+        <div>
+            <p id="team_2">Team Name</p>
+            <p>Member 1:</p>
+            <p id="member_21" name = "154">Teammate1</p>
+            <p>Member 2:</p>
+            <p id="member_22" name = "155">Teammate2</p>
+        </div>
+        <a href="http://localhost:3000/user?namespace=<%= namespace %>">http://localhost:3000/user?namespace=<%= namespace %></a>
+        <div id = "good_response">
+            <p >Raspuns corect</p>
+            <p>Raspuns</p>
+        </div>
         <script src="/admin.js"></script>
     </body>
     </html>

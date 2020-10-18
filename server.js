@@ -107,7 +107,7 @@ app.delete('/logout', async (req, res) => {
     res.redirect('/')
 })
 app.get('/style.css', function(req, res) {
-    res.sendFile(__dirname + "/views/css/" + "style.css");
+    res.sendFile(__dirname + "/views/css/" + "404.css");
 });
 app.get('/style_bad.css', function(req, res) {
     res.sendFile(__dirname + "/views/css/" + "style_bad.css");
@@ -192,14 +192,26 @@ async function get_Question() {
 
 }
 // Socket IO LOGIC
-const workspaces = io.of("/" + /^\/\w+$/);
+const workspaces = io.of(/^\/\w+$/);
 workspaces.on('connection', socket => {
-    const workspace = socket.nsp;
-    workspace.on('connection', socket =>{
-        console.log(socket.conn.id)
-        console.log(socket._rooms)
-    })
+        console.log(`User connected with id ${socket.conn.id}`)
+        // console.log(socket._rooms)
 
+        socket.on('connection', () =>{
+            console.log("Someone connected")
+        })
+
+        socket.on('message', (msg)=> {
+            console.log(msg);
+        });
+        socket.on('question', (msg)=>{
+            get_Question().then(r => io.emit('rasp',r));
+
+
+        });
+        socket.on('disconnect', () => {
+            console.log(`user with id ${socket.conn.id} disconnected`);
+        });
 });
 app.get('/user', checkAuthenticated, async (req, res) => {
     let user = await req.user
@@ -208,7 +220,7 @@ app.get('/user', checkAuthenticated, async (req, res) => {
         res.redirect('/')
     }
     else{
-        res.render('user_room.ejs',{user: user.full_name, namespace:nsp})
+        res.render('user_room.ejs',{user: user.full_name, namespace:nsp, pid: user.id})
     }
 })
 app.get('/admin', checkAuthenticated, async (req, res) => {
@@ -221,26 +233,10 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
         res.redirect('/user')
     }
     else{
-        res.render('admin_room.ejs', {namespace: nsp})
+        res.render('admin_room.ejs', {namespace: nsp, pid: user.id})
     }
 })
 
-io.on('connection', (socket) =>{
-    console.log(`User connected with id ${socket.conn.id}`)
-
-    // socket.on('message', (msg)=> {
-    //     console.log(msg);
-    // });
-    // socket.on('question', (msg)=>{
-    //     get_Question().then(r => io.emit('rasp',r));
-    //
-
-    // });
-
-    socket.on('disconnect', () => {
-        console.log(`user with id ${socket.conn.id} disconnected`);
-    });
-});
 // END of SOCKET.IO Logic
 //
 //
