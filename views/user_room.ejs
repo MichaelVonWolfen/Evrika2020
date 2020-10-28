@@ -8,13 +8,21 @@
 </head>
 <body>
 <h1>Room:<%=namespace%></h1>
-<h2 id="question_c"></h2>
 <h3> <%= user %> is READY</h3>
 <input type="hidden" value="<%= namespace %>" id="namespace">
 <input type="hidden" value="<%= pid %>" id="pid">
-<form action="">
-</form>
-
+<div class="">
+    <h1 id = "question">Intrebare</h1>
+    <div id="answers">
+        <button id = "button0" name= ""></button>
+        <button id = "button1" name= ""></button>
+        <button id = "button2" name= ""></button>
+        <button id = "button3" name= ""></button>
+    </div>
+</div>
+<div class="timer" >
+    <p id="timer">TIMER</p>
+</div>
 <script src="/user.js"></script>
 </body>
 </html>

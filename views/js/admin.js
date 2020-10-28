@@ -1,4 +1,9 @@
-const socket = io('/' + $('#namespace').val());
+const socket = io('/' + $('#namespace').val(), 
+    {
+        query: {
+                admin: true
+        }
+    });
 var idQuestion;
 var king_team1;
 var king_team2;
@@ -15,6 +20,8 @@ $('#sendToPlayers').click(function(){
         id_2: king_team2
     };
     socket.emit('toPlayers', query);
+    $('#sendToPlayers').prop('disabled', true);
+    $('#correctAnswer').prop('disabled', false);
 });
 $('#correctAnswer').click(function(){
     socket.emit('correctAnswer', '');
@@ -53,11 +60,11 @@ $('#member_22').click(function(){
 
 socket.on('rasp',function(msg){
     idQuestion = msg['id'];
-    $('#question_c').text(msg['question']);
-    $('form').empty();
-    for(let i = 0; i < 4; i++){
-        let button = `<input type="button" id = "button" name= "buton${i}" value="${msg['answers'][i]['answer']}">`
-        $('form').append(button);
-    }
-    console.log(msg);
+    $('#question').text(msg['question']);
+    $('#sendToPlayers').prop('disabled', false);
+    $('#correctAnswer').prop('disabled', true);
+    
+});
+socket.on('counter', function(count){
+    $('#timer').text(count);
 });

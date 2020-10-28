@@ -2,6 +2,8 @@ if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
 const port = 3000;
+const total_time_allowed = 15; //Time allowed to respond to a question
+const categories_total = 10; //Number of total questions
 const path = require('path')
 const express = require('express')
 const app = express()
@@ -168,51 +170,114 @@ function ExtractUser(res){
     }
     return user;
 }
-async function get_Question() {
+async function get_Question(category) {
     // create the pool
     // now get a Promise wrapped instance of that pool
     const promisePool = pool.promise();
     // query database using promises
-    const [quest] = await promisePool.query("select id, question, times_played from  questions\n" +
-        "where times_played like (select min(times_played) from questions)\n" +
-        "order by RAND()\n" +
-        "limit 1;");
+    let query = `select id, question, times_played from  questions\n 
+                where times_played like (select min(times_played) from questions where  question_type = ${category}) \n order by RAND()\n limit 1;`
+    const [quest] = await promisePool.query(query);
+    console.log(quest);
     let id = quest[0]['id']
     let question = quest[0]['question']
     let played_times = quest[0]['times_played']
 
-    const [answers] = await promisePool.query(`Select id, answer from answers where question_id = ${id} order by rand()`);
     let question_JSON = {
         'id' : id,
-        'question': question,
-        'answers': answers
+        'question': question
     };
     await promisePool.query(`UPDATE questions set times_played = ${played_times + 1} where id = ${id}`);
     return question_JSON;
 
 }
-// Socket IO LOGIC
-const workspaces = io.of(/^\/\w+$/);
-workspaces.on('connection', socket => {
-        console.log(`User connected with id ${socket.conn.id}`)
-        // console.log(socket._rooms)
+async function get_QuestionAndAnswers(queryBig) {
+    // create the pool
+    // now get a Promise wrapped instance of that pool
+    let id = queryBig.id
+    let k1 = queryBig.id_1
+    let k2 = queryBig.id_2
+    const promisePool = pool.promise();
+    // query database using promises
+    let query = `select question from questions where id = ${id}`
+    const [quest] = await promisePool.query(query);
 
-        socket.on('connection', () =>{
-            console.log("Someone connected")
-        })
+    const [answers] = await promisePool.query(`Select id, answer from answers where question_id = ${id} order by rand()`);
+    let button_answers = [];
+    for(let i = 0; i < 4; i++){
+        let button = {
+            name: answers[i]['id'],
+            text: answers[i]['answer']
+        }
+        button_answers.push(button);
+    }
+    let response = {
+        question: quest[0]['question'],
+        answers: button_answers,
+        kings:[
+            k1,k2
+        ]
+    }
+    return response;
 
-        socket.on('message', (msg)=> {
-            console.log(msg);
+}
+
+// Socket IO LOGIC.
+function countDown(namespace){
+    let counter = total_time_allowed + 1;
+    let WinnerCountdown = setInterval(function(){
+        counter--
+        io.of(namespace).emit('counter', counter);
+        if (counter === 0) {
+            clearInterval(WinnerCountdown); 
+        }
+    }, 1000);
+}
+io.of((nsp, query, next) => {
+    
+    next(null, true);
+  
+  }).on('connect', (socket) => {
+        socket.on('toPlayers', (msg)=> {
+            let namespace = socket.nsp.name
+            get_QuestionAndAnswers(msg).then(answers =>{
+                console.log(answers)
+                io.of(namespace).emit('answers', answers);
+            });
+            countDown(namespace)
         });
         socket.on('question', (msg)=>{
-            get_Question().then(r => io.emit('rasp',r));
-
-
+            if (isNaN(msg)){
+                socket.emit('error', 'Error! That is not allowed!');
+            }else{
+                if(msg < 0 || msg > categories_total){
+                    socket.emit('error', 'Error! No question category that high/low!');
+                }
+                get_Question(msg).then(r => socket.emit('rasp',r));
+            }
+            
         });
-        socket.on('disconnect', () => {
-            console.log(`user with id ${socket.conn.id} disconnected`);
-        });
-});
+    // socket connected to your namespace
+  });
+// const dynamicNsp = io.of(/^\/\d+$/).on('connect', (socket) => {
+//     const workspaces = socket.nsp; // newNamespace.name === '/dynamic-101'
+  
+//     // broadcast to all clients in the given sub-namespace
+//     workspaces.emit('hello');
+//     workspaces.on('connection', socket => {
+//         console.log(`User connected with id ${socket.conn.id}`)
+//         // console.log(socket._rooms)
+        
+//         socket.on('connection', () =>{
+//             console.log("Someone connected")
+//             console.log(Object.keys(io.nsps))
+//         })
+//         
+//         socket.on('disconnect', () => {
+//             console.log(`user with id ${socket.conn.id} disconnected`);
+//         });
+//     });
+// });
 app.get('/user', checkAuthenticated, async (req, res) => {
     let user = await req.user
     let nsp = req.query.namespace
