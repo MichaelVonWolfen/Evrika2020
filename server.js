@@ -133,6 +133,17 @@ function checkNotAuthenticated(req, res, next){
     }
     next()
 }
+async function namespaceExists(req, res, next){
+    namespace = req.query.namespace
+    try{
+        let [hasAdmin] = await promisePool.query(`SELECT id from active_namespaces where namespace_identifier like '${namespace}'`)
+        if(hasAdmin.length === 0)
+            return res.redirect('/')
+    }catch (e){
+        console.log(e)
+    }
+    next()
+}
 async function GetUserByEmail(email){
     try {
         const [res] = await promisePool.query(`select id, concat(first_name,' ', last_name) as 'full_name', email, 
@@ -267,7 +278,7 @@ io.of((nsp, query, next) => {
             //TODO:: INSERT THE ANSWER AND TIME IN THE DB
         });
   });
-app.get('/user', checkAuthenticated, async (req, res) => {
+app.get('/user', checkAuthenticated, namespaceExists, async (req, res) => {
     let user = await req.user
     let nsp = req.query.namespace
     if(user.role !== 'ROLE_USER'){
