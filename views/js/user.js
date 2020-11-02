@@ -9,8 +9,12 @@ socket.on('answers', (msg) =>{
         $(`#button${i}`).attr('name',msg.answers[i].name);
         $(`#button${i}`).text(msg.answers[i].text);
     }
-    enable_buttons()
     let king = $('#pid').attr('value')
+    if(msg.kings[0] === king || msg.kings[1] === king){
+        enable_buttons()
+    }else{
+        dissable_buttons()
+    }
 })
 
 $('#button0').click(function(){
@@ -29,10 +33,7 @@ function disable_buttons(answer, name){
     let r = confirm(`Vei submite:${answer}\nEsti sigur?`)
     let counter = $('#counter').text()
     if(r){
-        $('#button0').prop('disabled', true);
-        $('#button1').prop('disabled', true);
-        $('#button2').prop('disabled', true);
-        $('#button3').prop('disabled', true);
+        dissable_buttons()
         socket.emit('raspuns',{
             personID: $('#pid').attr('value'),
             answerID: name,
@@ -40,6 +41,12 @@ function disable_buttons(answer, name){
         })
         
     }
+}
+function dissable_buttons(){
+    $('#button0').prop('disabled', true);
+    $('#button1').prop('disabled', true);
+    $('#button2').prop('disabled', true);
+    $('#button3').prop('disabled', true);
 }
 function enable_buttons(){
         $('#button0').prop('disabled', false);

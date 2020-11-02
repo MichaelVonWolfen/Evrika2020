@@ -33,7 +33,7 @@ $('button').click(function(){
     let type = categories.indexOf($(this).attr('id'));
     if(type !== -1){
         socket.emit('question',type + 1);
-        $(this).prop('disabled', true);
+        // $(this).prop('disabled', true);
     }
 });
 $('#member_11').click(function(){

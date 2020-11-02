@@ -138,9 +138,9 @@ async function namespaceExists(req, res, next){
     try{
         let [hasAdmin] = await promisePool.query(`SELECT id from active_namespaces where namespace_identifier like '${namespace}'`)
         if(hasAdmin.length === 0)
-            return res.redirect('/')
+            return res.redirect('/404')
     }catch (e){
-        console.log(e)
+        console.error(e)
     }
     next()
 }
@@ -153,7 +153,7 @@ async function GetUserByEmail(email){
         // console.log(user)
         return user
     }catch (e){
-        console.log(e)
+        console.error(e)
     }
 }
 async function GetUserByID(id){
@@ -165,7 +165,7 @@ async function GetUserByID(id){
         // console.log(user)
         return user
     }catch (e){
-        console.log(e)
+        console.error(e)
     }
 }
 function ExtractUser(res){
@@ -233,9 +233,22 @@ async function get_QuestionAndAnswers(queryBig) {
     return response;
 
 }
-async function saveAnswer(teamID, ansID, timerValue){
-    let time = total_time_allowed - timerValue;
-    let wuery = ""
+async function saveAnswer(userID, ansID, timerValue){
+    try{
+
+        let time = total_time_allowed - timerValue;
+        let query = `Select team_id from users where id  = ${userID}`
+        
+        let teamID = await promisePool.query(query)
+        teamID = teamID[0][0]["team_id"]
+        
+        query = `INSERT INTO answers_recieved(team_id, answer_id, total_time, createdAt, updatedAt)
+        Values(${teamID}, ${ansID}, ${time},  current_timestamp, current_timestamp)`
+        await promisePool.query(query)
+    }catch(e){
+        console.error(e)
+    }
+
 }
 // Socket IO LOGIC.
 function countDown(namespace){
@@ -275,6 +288,7 @@ io.of((nsp, query, next) => {
         });
         socket.on('raspuns', (msg)=>{
             console.log(msg);
+            saveAnswer(msg.personID, msg.answerID, msg.timerValue)
             //TODO:: INSERT THE ANSWER AND TIME IN THE DB
         });
   });
@@ -306,12 +320,14 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
 //
 //
 // MUST be placed always at the end
-
-app.get('*', function(req, res){
+app.get('/404', (req,res)=>{
     res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
 })
+app.get('*', function(req, res){
+    res.redirect('/404')
+})
 app.post('*', (req, res) => {
-    res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
+    res.redirect('/404')
 })
 
 server.listen(port, () => {
