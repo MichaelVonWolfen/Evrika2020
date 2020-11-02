@@ -95,7 +95,8 @@ app.post('/register', async (req, res) => {
 
         const id = team[0]['id'];
         await promisePool.query(`insert into users(first_name, last_name, email, password, phone, faculty, team_id, role, createdAt, updatedAt)
-                                        values ('${fname}', '${lname}', lower('${email}'), '${hashedPass}','${phone}', '${college}','${id}', 'ROLE_USER', current_timestamp, current_timestamp)`);
+                                        values ('${fname}', '${lname}', lower('${email}'), '${hashedPass}','${phone}', '${college}','${id}',
+                                        'ROLE_USER', current_timestamp, current_timestamp)`);
 
         res.redirect('/login');
 
@@ -221,7 +222,10 @@ async function get_QuestionAndAnswers(queryBig) {
     return response;
 
 }
-
+async function saveAnswer(teamID, ansID, timerValue){
+    let time = total_time_allowed - timerValue;
+    let wuery = ""
+}
 // Socket IO LOGIC.
 function countDown(namespace){
     let counter = total_time_allowed + 1;
@@ -252,32 +256,17 @@ io.of((nsp, query, next) => {
             }else{
                 if(msg < 0 || msg > categories_total){
                     socket.emit('error', 'Error! No question category that high/low!');
+                }else{
+                    get_Question(msg).then(r => socket.emit('rasp',r));
                 }
-                get_Question(msg).then(r => socket.emit('rasp',r));
             }
             
         });
-    // socket connected to your namespace
+        socket.on('raspuns', (msg)=>{
+            console.log(msg);
+            //TODO:: INSERT THE ANSWER AND TIME IN THE DB
+        });
   });
-// const dynamicNsp = io.of(/^\/\d+$/).on('connect', (socket) => {
-//     const workspaces = socket.nsp; // newNamespace.name === '/dynamic-101'
-  
-//     // broadcast to all clients in the given sub-namespace
-//     workspaces.emit('hello');
-//     workspaces.on('connection', socket => {
-//         console.log(`User connected with id ${socket.conn.id}`)
-//         // console.log(socket._rooms)
-        
-//         socket.on('connection', () =>{
-//             console.log("Someone connected")
-//             console.log(Object.keys(io.nsps))
-//         })
-//         
-//         socket.on('disconnect', () => {
-//             console.log(`user with id ${socket.conn.id} disconnected`);
-//         });
-//     });
-// });
 app.get('/user', checkAuthenticated, async (req, res) => {
     let user = await req.user
     let nsp = req.query.namespace
@@ -295,7 +284,7 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
         nsp = Date.now() + user.id + Math.floor(Math.random() * 10);
 
     if(user.role !== 'ROLE_ADMIN'){
-        res.redirect('/user')
+        res.redirect('/')
     }
     else{
         res.render('admin_room.ejs', {namespace: nsp, pid: user.id})

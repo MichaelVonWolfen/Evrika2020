@@ -34,9 +34,11 @@ function disable_buttons(answer, name){
         $('#button2').prop('disabled', true);
         $('#button3').prop('disabled', true);
         socket.emit('raspuns',{
-            person: $('#pid').attr('value'),
-            answer: name
+            personID: $('#pid').attr('value'),
+            answerID: name,
+            timerValue: $('#timer').text()
         })
+        
     }
 }
 function enable_buttons(){
