@@ -37,6 +37,8 @@ initializePassport(
 
 // const users = []
 
+app.use(express.static(path.join(__dirname, 'static')));
+
 app.set('view-engine', 'ejs')
 app.use(express.urlencoded({extended:false}))
 app.use(flash())
@@ -109,18 +111,8 @@ app.delete('/logout', async (req, res) => {
     req.logOut()
     res.redirect('/')
 })
-app.get('/style.css', function(req, res) {
-    res.sendFile(__dirname + "/views/css/" + "404.css");
-});
-app.get('/style_bad.css', function(req, res) {
-    res.sendFile(__dirname + "/views/css/" + "style_bad.css");
-});
-app.get('/admin.js', function(req, res) {
-    res.sendFile(__dirname + "/views/js/" + "admin.js");
-});
-app.get('/user.js', function(req, res) {
-    res.sendFile(__dirname + "/views/js/" + "user.js");
-});
+
+
 function checkAuthenticated(req, res, next){
     if(req.isAuthenticated()){
         return next()
