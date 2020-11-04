@@ -1,5 +1,8 @@
 let timp_pornire = new Date().getTime();
 
+//1 cand userul a trimis raspuns ( daca nu apasa send in momentul terminarii timpului se va trimite automat ce e selectat)
+let response_sent  = 0;
+
 jQuery(function() {
 	var procent=100;
 	$('.progress-done').on("click", function() {
@@ -10,28 +13,6 @@ jQuery(function() {
 		this.style.opacity = 1;
     });
 
-	// function sendResponse(raspuns){
-  	// 	var categorie = $(".nume_categorie")[0].textContent;
-  	// 	categorie=categorie.substring(0, categorie.length - 1);
-  	// 	$.ajax({
-	// 	  type: "POST",
-	// 	  url: "/raspuns_intrebare",
-	// 	  data: {
-	// 	  	'raspuns':raspuns,
-	// 	  	'categorie':categorie
-	// 	  },
-	// 	  dataType: "json",
-	// 	  success: function(data){
-	// 		     	alert(data);
-	// 		     	window.location = '/intrebari';
-	// 		  	}
-		  
-	// 	});
-	// }
-	$( ".varianta_alegere" ).on("click", function() {
-		var raspuns = this.id;
-		//sendResponse(raspuns);
-	});
 	let show_time = 14;
 	let y= setInterval(function() {
 		$('#seconds').text(`${show_time}`)
@@ -41,20 +22,20 @@ jQuery(function() {
 		}
  	}, 1000);
 	var x = setInterval(function() {
-		//console.log(new Date().getTime());
+
 		var aux = new Date().getTime() - timp_pornire;
-		// Output the result in an element with id="demo"
 
         procent=(15000-aux)/150;
 		$('.progress-done').trigger('click');
 
-		// If the count down is over, write some text 
 		if ( aux > 15000) {
-			//sendResponse('x');
-			$('#button0').addClass('disabled');
-			$('#button1').addClass('disabled');
-			$('#button2').addClass('disabled');
-			$('#button3').addClass('disabled');
+			
+			if ( response_sent == 0 ) {
+				pressed = $('.selected');
+				answer = $(pressed).attr("value");
+				name = $(pressed).attr("name");
+				send(answer, name);
+			}
 			clearInterval(x);
 		}
 	}, 50);
@@ -81,10 +62,9 @@ $('#button0,#button1,#button2,#button3').on("click", function(){
 
 $('#submit').on("click", function(){
 	pressed = $('.selected');
-	console.log($(pressed).attr("value"))
 	answer = $(pressed).attr("value");
 	name = $(pressed).attr("name");
-	try_send(answer, name);
+	send(answer, name);
 });
 
 function refresh_selected(button) {
@@ -94,21 +74,20 @@ function refresh_selected(button) {
 	$('#button3').removeClass('selected');
 	$(button).addClass('selected');
 }
-function try_send(answer, name){
-    let r = confirm(`Vei submite:${answer}\nEsti sigur?`)
-    let counter = $('#counter').text()
-    if(r){
-        $('#button0').addClass('disabled');
-        $('#button1').addClass('disabled');
-        $('#button2').addClass('disabled');
-        $('#button3').addClass('disabled');
-        socket.emit('raspuns',{
-            personID: $('#pid').attr('value'),
-            answerID: name,
-            timerValue: $('#timer').text()
-        })
-        
-    }
+
+function send(answer, name) {
+	$('#button0').addClass('disabled');
+	$('#button1').addClass('disabled');
+	$('#button2').addClass('disabled');
+	$('#button3').addClass('disabled');
+	socket.emit('raspuns',{
+		personID: $('#pid').attr('value'),
+		answerID: name,
+		timerValue: $('#timer').text()
+	})
+	response_sent = 1;
+	//for checking
+	confirm(`Ai submis:${answer}\n`);
 }
 function enable_buttons(){
         $('#button0').prop('disabled', false);
