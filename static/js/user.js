@@ -1,9 +1,13 @@
-let timp_pornire = new Date().getTime();
 
-//1 cand userul a trimis raspuns ( daca nu apasa send in momentul terminarii timpului se va trimite automat ce e selectat)
-let response_sent  = 0;
 
 jQuery(function() {
+	let timp_pornire = new Date().getTime();
+
+	//1 cand userul a trimis raspuns ( daca nu apasa send in momentul terminarii timpului se va trimite automat ce e selectat)
+	let response_sent  = 0;
+
+	enable_buttons();
+
 	var procent=100;
 	$('.progress-done').on("click", function() {
 		//console.warn(procent);
@@ -68,18 +72,15 @@ $('#submit').on("click", function(){
 });
 
 function refresh_selected(button) {
-	$('#button0').removeClass('selected');
-	$('#button1').removeClass('selected');
-	$('#button2').removeClass('selected');
-	$('#button3').removeClass('selected');
+	pressed = $('.selected');
+	$(pressed).removeClass('selected');
 	$(button).addClass('selected');
 }
 
 function send(answer, name) {
-	$('#button0').addClass('disabled');
-	$('#button1').addClass('disabled');
-	$('#button2').addClass('disabled');
-	$('#button3').addClass('disabled');
+	
+	disable_buttons()
+
 	socket.emit('raspuns',{
 		personID: $('#pid').attr('value'),
 		answerID: name,
@@ -89,9 +90,16 @@ function send(answer, name) {
 	//for checking
 	confirm(`Ai submis:${answer}\n`);
 }
+
+function disable_buttons() {
+	for(i = 0; i < 4; i++) {
+		$(`#button${i}`).addClass('disabled');
+	}
+	$('#submit').addClass('disabled');
+}
 function enable_buttons(){
-        $('#button0').prop('disabled', false);
-        $('#button1').prop('disabled', false);
-        $('#button2').prop('disabled', false);
-        $('#button3').prop('disabled', false);
+	for(i = 0; i < 4; i++) {
+		$(`#button${i}`).removeClass('disabled');
+	}
+	$('#submit').removeClass('disabled');
 }
