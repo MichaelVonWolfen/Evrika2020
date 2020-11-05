@@ -12,6 +12,10 @@ module.exports = {
         type: Sequelize.INTEGER,
         references:{model:'teams', key:'id'}
       },
+      question_id:{
+        type: Sequelize.INTEGER,
+        references: {model:'questions', key:'id'}
+      },
       answer_id: {
         type: Sequelize.INTEGER,
         references: {model:'answers', key: 'id'}
