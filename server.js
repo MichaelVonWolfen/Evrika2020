@@ -31,11 +31,8 @@ initializePassport(
     passport,
     email => GetUserByEmail(email),
     id =>GetUserByID(id)
-    // email => users.find(user => user.email === email),
-    // id => users.find(user => user.id === id)
     )
 
-// const users = []
 
 app.use(express.static(path.join(__dirname, 'static')));
 
@@ -125,6 +122,17 @@ function checkNotAuthenticated(req, res, next){
     }
     next()
 }
+async function namespaceExists(req, res, next){
+    namespace = req.query.namespace
+    try{
+        let [hasAdmin] = await promisePool.query(`SELECT id from active_namespaces where namespace_identifier like '${namespace}'`)
+        if(hasAdmin.length === 0)
+            return res.redirect('/404')
+    }catch (e){
+        console.error(e)
+    }
+    next()
+}
 async function GetUserByEmail(email){
     try {
         const [res] = await promisePool.query(`select id, concat(first_name,' ', last_name) as 'full_name', email, 
@@ -134,7 +142,7 @@ async function GetUserByEmail(email){
         // console.log(user)
         return user
     }catch (e){
-        console.log(e)
+        console.error(e)
     }
 }
 async function GetUserByID(id){
@@ -146,7 +154,7 @@ async function GetUserByID(id){
         // console.log(user)
         return user
     }catch (e){
-        console.log(e)
+        console.error(e)
     }
 }
 function ExtractUser(res){
@@ -163,15 +171,31 @@ function ExtractUser(res){
     }
     return user;
 }
-async function get_Question(category) {
+async function get_Question(msg) {
     // create the pool
     // now get a Promise wrapped instance of that pool
+    let category = msg.id
+    let t1 = msg.id_1
+    let t2 = msg.id_2
+    console.log(msg)
     const promisePool = pool.promise();
     // query database using promises
-    let query = `select id, question, times_played from  questions\n 
-                where times_played like (select min(times_played) from questions where  question_type = ${category}) \n order by RAND()\n limit 1;`
+    let query =`select id, question, times_played from  questions 
+                where times_played like (
+                                            Select min(times_played) from questions 
+                                            where  question_type = ${category}
+                                        ) AND
+                        id not in (
+                                    Select question_id from answers_recieved
+                                    where team_id in (
+                                                        Select team_id from users
+                                                        where id in (${t1}, ${t2})
+                                                    )
+                                    )
+                order by RAND()
+                limit 1;`
     const [quest] = await promisePool.query(query);
-    console.log(quest);
+    // console.log(quest);
     let id = quest[0]['id']
     let question = quest[0]['question']
     let played_times = quest[0]['times_played']
@@ -214,9 +238,23 @@ async function get_QuestionAndAnswers(queryBig) {
     return response;
 
 }
-async function saveAnswer(teamID, ansID, timerValue){
-    let time = total_time_allowed - timerValue;
-    let wuery = ""
+async function saveAnswer(userID, ansID, timerValue){
+    try{
+        let time = total_time_allowed - timerValue;
+        let query = `Select team_id from users where id  = ${userID}`
+        
+        let teamID = (await promisePool.query(query))[0][0]["team_id"]
+        
+        query = `Select question_id from answers where id like ${ansID}`
+        let question_id = (await promisePool.query(query))[0][0]["question_id"]
+
+        query = `INSERT INTO answers_recieved(team_id, answer_id, question_id, total_time, createdAt, updatedAt)
+        Values(${teamID}, ${ansID}, ${question_id}, ${time},  current_timestamp, current_timestamp)`
+        await promisePool.query(query)
+    }catch(e){
+        console.error(e)
+    }
+
 }
 // Socket IO LOGIC.
 function countDown(namespace){
@@ -243,10 +281,11 @@ io.of((nsp, query, next) => {
             countDown(namespace)
         });
         socket.on('question', (msg)=>{
-            if (isNaN(msg)){
+            if (isNaN(msg.id)){
                 socket.emit('error', 'Error! That is not allowed!');
-            }else{
-                if(msg < 0 || msg > categories_total){
+            }
+            else{
+                if(msg.id < 0 || msg.id > categories_total){
                     socket.emit('error', 'Error! No question category that high/low!');
                 }else{
                     get_Question(msg).then(r => socket.emit('rasp',r));
@@ -256,10 +295,11 @@ io.of((nsp, query, next) => {
         });
         socket.on('raspuns', (msg)=>{
             console.log(msg);
+            saveAnswer(msg.personID, msg.answerID, msg.timerValue)
             //TODO:: INSERT THE ANSWER AND TIME IN THE DB
         });
   });
-app.get('/user', checkAuthenticated, async (req, res) => {
+app.get('/user', checkAuthenticated, namespaceExists, async (req, res) => {
     let user = await req.user
     let nsp = req.query.namespace
     if(user.role !== 'ROLE_USER'){
@@ -287,12 +327,14 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
 //
 //
 // MUST be placed always at the end
-
-app.get('*', function(req, res){
+app.get('/404', (req,res)=>{
     res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
 })
+app.get('*', function(req, res){
+    res.redirect('/404')
+})
 app.post('*', (req, res) => {
-    res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
+    res.redirect('/404')
 })
 
 server.listen(port, () => {

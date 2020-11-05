@@ -13,13 +13,22 @@ var categories = [ "nature", "quotes", "social", "movies", "facts",
 $('document').ready(function(){
     socket.emit('get_types_responded', '');
 })
-$('#sendToPlayers').click(function(){
-    let query = {
-        id: idQuestion,
+function query(data){
+    return {
+        id: data,
         id_1: king_team1, 
         id_2: king_team2
-    };
-    socket.emit('toPlayers', query);
+    }
+}
+$('button').click(function(){
+    let type = categories.indexOf($(this).attr('id'));
+    if(type !== -1){
+        socket.emit('question',query(type + 1));
+        // $(this).prop('disabled', true);
+    }
+});
+$('#sendToPlayers').click(function(){
+    socket.emit('toPlayers', query(idQuestion));
     $('#sendToPlayers').prop('disabled', true);
     $('#correctAnswer').prop('disabled', false);
 });
@@ -28,13 +37,6 @@ $('#correctAnswer').click(function(){
 });
 $('#startSession').click(function(){
     socket.emit("start", 'New Round!');
-});
-$('button').click(function(){
-    let type = categories.indexOf($(this).attr('id'));
-    if(type !== -1){
-        socket.emit('question',type + 1);
-        $(this).prop('disabled', true);
-    }
 });
 $('#member_11').click(function(){
     king_team1 = $(this).attr('name');

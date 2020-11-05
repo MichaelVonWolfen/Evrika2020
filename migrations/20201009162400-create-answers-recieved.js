@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('answers_recieveds', {
+    await queryInterface.createTable('answers_recieved', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -12,12 +12,16 @@ module.exports = {
         type: Sequelize.INTEGER,
         references:{model:'teams', key:'id'}
       },
+      question_id:{
+        type: Sequelize.INTEGER,
+        references: {model:'questions', key:'id'}
+      },
       answer_id: {
         type: Sequelize.INTEGER,
         references: {model:'answers', key: 'id'}
       },
       total_time: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -32,6 +36,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('answers_recieveds');
+    await queryInterface.dropTable('answers_recieved');
   }
 };

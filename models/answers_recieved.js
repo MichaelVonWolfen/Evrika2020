@@ -16,7 +16,8 @@ module.exports = (sequelize, DataTypes) => {
   answers_recieved.init({
     team_id: DataTypes.INTEGER,
     answer_id: DataTypes.INTEGER,
-    total_time: DataTypes.DATE
+    question_id: DataTypes.INTEGER,
+    total_time: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'answers_recieved',

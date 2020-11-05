@@ -12,8 +12,19 @@ module.exports = {
         type: Sequelize.INTEGER,
         references:{model: 'users', key: 'id'}
       },
+      team1_id: {
+        type: Sequelize.INTEGER,
+        references:{model: 'teams', key: 'id'}
+      },
+      team2_id: {
+        type: Sequelize.INTEGER,
+        references:{model: 'teams', key: 'id'}
+      },
       namespace_identifier: {
         type: Sequelize.STRING
+      },
+      is_active: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,
