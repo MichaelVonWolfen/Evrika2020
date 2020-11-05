@@ -4,13 +4,10 @@ jQuery(function() {
 
 	//1 cand userul a trimis raspuns ( daca nu apasa send in momentul terminarii timpului se va trimite automat ce e selectat)
 
-	enable_buttons();
-
 	var procent=100;
 	$('.progress-done').on("click", function() {
 		//console.warn(procent);
 		this.setAttribute('data-done', procent);
-
 		this.style.width = this.getAttribute('data-done') + '%';
 		this.style.opacity = 1;
     });
