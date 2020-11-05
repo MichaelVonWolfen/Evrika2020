@@ -1,0 +1,280 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Lato', sans-serif;
+    background-color: #F8F8F8;
+    background-image: url("../imagini/Background.svg") !important;
+}
+
+.selected {
+    background: transparent linear-gradient(272deg, #630B7F 0%, #3B55FF 100%) 0% 0% no-repeat padding-box;
+}
+
+.btn-large
+{
+    margin-top: 20px;
+    border-radius: 18px;
+    opacity: 1;
+    line-height: 70px;
+    height: 70px;
+    margin-bottom: 20px !important;
+
+}
+
+#submit {
+    background-color: #3B55FF !important;
+}
+
+#seconds {
+    margin: 0px;
+}
+
+
+.progress {
+	background-color: #d8d8d8;
+	border-radius: 100px !important;
+	position: relative;
+	margin: 0px 0 !important;
+	height: 25px !important;
+}
+
+.progress-done {
+	background: transparent linear-gradient(272deg, #630B7F 0%, #3B55FF 100%) 0% 0% no-repeat padding-box;
+	box-shadow: 0px 3px 6px #630B7F6E;
+	border-radius: 30px !important;
+	color: #fff;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    height: 100%;
+	width: 0;
+	opacity: 0;
+}
+/* 
+.varianta_alegere {
+	background: transparent linear-gradient(272deg, #630B7F 0%, #3B55FF 100%) 0% 0% no-repeat padding-box;
+	box-shadow: 0px 3px 6px #630B7F6E;
+	
+} */
+
+
+
+
+.intrebari {
+    column-count: 2;
+    column-gap: 50px;
+}
+
+.intrebari img {
+    max-width: 100%;
+    height: 100%;
+}
+
+.qNumber h1{
+    color: #622B7C;
+    font-weight: bold;
+
+    padding-top: 20%;
+}
+
+.qNumber p {
+    margin-top: 5%;
+    letter-spacing: 1px;
+    font-size: 25px;
+}
+
+.var {
+    width: 90%;
+
+    margin-bottom: 20%;
+    padding: 8% 10%;
+
+    background-color: #CCAFCD;
+    cursor: pointer;
+
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 30px;
+}
+
+.var:hover {
+    background-color: #7D4D95;
+    color: #fff;
+
+    border-radius: 30px;
+}
+
+.card {
+    height: auto !important;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0%;
+    width: 100%;
+
+    background-color: #4E2B72;
+}
+
+#footer {
+    width: 60px;
+    padding: 10px 0 10px 20px;
+}
+
+#progres {
+    text-transform: uppercase;
+    color: #fff;
+
+    vertical-align: 20px;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+
+/* .pBar {
+    width: 40%;
+    color: #CCAFCD;
+    float: right;
+} */
+
+.H1 {
+    text-align: center;
+    z-index: 2;
+}
+
+.qNumber2 {
+    /* background-color: #CCAFCD; */
+    width: 80%;
+}
+
+.qNumber2 h1{
+    color: #622B7C;
+    font-weight: bold;
+
+    padding-top: 10%;
+}
+
+.qNumber2 p {
+    margin-top: 15%;
+    margin-bottom: 5%;
+
+    letter-spacing: 1px;
+    text-align: center;
+}
+
+.qNumber2 img {
+    width: 30%;
+    max-width: 100%;
+
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+    /* margin-top: 25%; */
+    padding-top: 10%;
+}
+
+.accountBtn {
+    text-decoration: none;
+    color: #fff;
+    background-color: #CCAFCD;
+    font-size: 15px;
+
+    padding: 10px 20px;
+
+    float: right;
+    margin-right: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.accountBtn:hover {
+    background-color: #C49FCA;
+}
+
+@media only screen and (max-width: 767px) {
+    /* body {
+        background-image: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.3)), url(icons/-\ fall\ mood\ -\ -\ mayaruth\ on\ pinterest\ -.jpg);
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+
+        height: 100vh;
+    } */
+
+    #sideImg {
+        display: none;
+    }
+
+    .intrebari {
+        column-count: 1;
+    }
+
+    .choices {
+        column-count: 1;
+    }
+
+    .var {
+        width: 90%;
+        margin-bottom: 30px;
+        margin-left: 5%;
+        padding: 20px 20px;
+        /* color: #fff; */
+        /* font-weight: bolder; */
+    }
+
+    /* html {
+        overflow: auto;
+    } */
+
+    .qNumber h1 {
+        padding-top: 30px;
+        margin-left: 5%;
+    }
+
+    .qNumber p {
+        margin-left: 5%;
+        /* color: #fff; */
+        font-weight: bolder;
+        font-size: 25px;
+    }
+
+    .var a {
+        padding: 10px 10px;
+    }
+
+    #side {
+        display: none;
+    }
+
+    /* .qNumber2 h1 {
+        margin-left: 100px;
+    } */
+
+    .qNumber2 p {
+        margin-bottom: auto;
+    }
+
+    /* .qNumber2 img{
+        margin-left: 45%;
+    } */
+
+    .qNumber2 {
+        text-align: center;
+        /* background-color: #7D4D95; */
+        width: 100%;
+        height: 80%;
+    }
+
+    .qNumber2 img {
+        padding-top: 15px;
+        width: 150px;
+    }
+
+    .qNumber2 h1 {
+        margin-bottom: 10px;
+    }
+}

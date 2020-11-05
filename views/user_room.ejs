@@ -2,14 +2,74 @@
 <html>
 <head>
     <title>Socket.IO chat</title>
-    <link href="/style_bad.css" rel="stylesheet" />
+    <link href="css/user_room.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/materialize.min.css" />
+    <script src="js/materialize.min.js"></script>
+    <script src="https://kit.fontawesome.com/a85a75ed5d.js" crossorigin="anonymous"></script>
 </head>
 <body>
-<h1>Room:<%=namespace%></h1>
-<h3> <%= user %> is READY</h3>
-<input type="hidden" value="<%= namespace %>" id="namespace">
+<div class="container">
+    <div class="row">
+        <div class="card large">
+            <div class="card-content ">
+                <div class="col s2 m2 l1">
+                    <h5 id="seconds">15</h5>
+                </div>
+                <div class="progress col s10 m10 l11 "> 
+                    <div class="progress-done" data-done="30">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+            <div class="card large">
+                <div class="row">
+                    <div id="form-container-2" class="card-content">
+                        <flow-text class="nume_categorie">{{categorie}}:</flow-text>
+                        <h3 id = "question">Acesta este un placeholhder?</h3>
+                        <br>
+    
+                        <div class="row" id="answers">
+                            <input type="hidden" value="<%= pid %>" id="pid">
+                            <div class="col s12 m12 l6 btn-container">
+                                <div id = "button0" class="btn btn-large white black-text col s12 m10 offset-m1 varianta_alegere valign-wrapper" value="A" name="">
+                                    A.DA
+                                </div>
+                            </div>
+    
+                            <div class="col s12 m12 l6 btn-container">
+                                <div id = "button1" class="btn btn-large white black-text col s12 m10 offset-m1 varianta_alegere" value="B" name="">
+                                    B.DA
+                                </div>
+                            </div>
+    
+                            <div class="col s12 m12 l6 btn-container">
+                                <div id = "button2" class="btn btn-large white black-text col s12 m10 offset-m1 varianta_alegere" value="C" name="">
+                                    C.DA
+                                </div>
+                            </div>
+    
+                            <div class="col s12 m12 l6 btn-container">
+                                <div id = "button3" class="btn btn-large white black-text col s12 m10 offset-m1 varianta_alegere" value="D" name="">
+                                    D.DA
+                             </div>
+                            
+                        </div>
+                        
+                    </div>
+                    <button id="submit" class="btn waves-effect waves-light center" type="submit" name="action">
+                        <i class="material-icons right">Raspunde</i>
+                    </button>
+                </div>
+        </div>
+    </div>
+</div>
+    
+<!-- <input type="hidden" value="<%= namespace %>" id="namespace">
 <input type="hidden" value="<%= pid %>" id="pid">
 <div class="">
     <h1 id = "question">Acesta este un placeholhder?</h1>
@@ -22,7 +82,7 @@
 </div>
 <div class="timer" >
     <p id="timer">TIMER</p>
-</div>
-<script src="/user.js"></script>
+</div> -->
+<script src="/js/user.js"></script>
 </body>
 </html>
