@@ -257,15 +257,16 @@ async function saveAnswer(userID, ansID, timerValue){
 
 }
 // Socket IO LOGIC.
+var timeDivisor = 100;
 function countDown(namespace){
     let counter = total_time_allowed + 1;
     let WinnerCountdown = setInterval(function(){
-        counter--
-        io.of(namespace).emit('counter', counter);
-        if (counter === 0) {
+        counter-= 0.1
+        io.of(namespace).emit('counter', Math.ceil(counter * timeDivisor)/timeDivisor);
+        if (counter <= 0.01) {
             clearInterval(WinnerCountdown); 
         }
-    }, 1000);
+    }, timeDivisor);
 }
 io.of((nsp, query, next) => {
     
@@ -275,7 +276,7 @@ io.of((nsp, query, next) => {
         socket.on('toPlayers', (msg)=> {
             let namespace = socket.nsp.name
             get_QuestionAndAnswers(msg).then(answers =>{
-                console.log(answers)
+                // console.log(answers)
                 io.of(namespace).emit('answers', answers);
             });
             countDown(namespace)

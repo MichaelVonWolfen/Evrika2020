@@ -29,12 +29,13 @@
             <div class="card large">
                 <div class="row">
                     <div id="form-container-2" class="card-content">
+                        <input type="hidden" value="<%= pid %>" id="pid">
+                        <input type="hidden" value="<%= namespace %>" id="namespace">
                         <flow-text class="nume_categorie">{{categorie}}:</flow-text>
                         <h3 id = "question">Acesta este un placeholhder?</h3>
                         <br>
     
                         <div class="row" id="answers">
-                            <input type="hidden" value="<%= pid %>" id="pid">
                             <div class="col s12 m12 l6 btn-container">
                                 <div id = "button0" class="btn btn-large white black-text col s12 m10 offset-m1 varianta_alegere valign-wrapper" value="A" name="">
                                     A.DA
