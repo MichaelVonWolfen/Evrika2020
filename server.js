@@ -26,7 +26,8 @@ const pool = mysql.createPool(
             });
 const promisePool = pool.promise();
 
-const initializePassport = require('./passport-config')
+const initializePassport = require('./passport-config');
+const { exception } = require('console');
 initializePassport(
     passport,
     email => GetUserByEmail(email),
@@ -122,12 +123,23 @@ function checkNotAuthenticated(req, res, next){
     }
     next()
 }
-async function namespaceExists(req, res, next){
-    namespace = req.query.namespace
+async function namespaceExistsAndAllowed(req, res, next){
+    // if namespace exists and team is allowed or multimedia then allow them to acces the page.
+    let namespace = req.query.namespace
     try{
-        let [hasAdmin] = await promisePool.query(`SELECT id from active_namespaces where namespace_identifier like '${namespace}'`)
+        let [hasAdmin] = await promisePool.query(`SELECT team1_id as t1, team2_id as t2 from active_namespaces where namespace_identifier like '${namespace}'`)
+
         if(hasAdmin.length === 0)
             return res.redirect('/404')
+        let team1 = hasAdmin[0]["t1"]
+        let team2 = hasAdmin[0]["t2"]
+        let user = await req.user
+        let userTeam = user.team_id
+
+        if(userTeam !== team1 && userTeam !== team2 && user.role !== 'ROLE_MULTIMEDIA')
+            return res.redirect('/404')
+
+
     }catch (e){
         console.error(e)
     }
@@ -256,6 +268,26 @@ async function saveAnswer(userID, ansID, timerValue){
     }
 
 }
+async function GetTeamsList(){
+    // throw new exception("Not implemented");
+    try{
+        let query = `Select id, name from teams where role like 'ROLE_USER'`
+        
+        let teams = (await promisePool.query(query))[0]
+        let obtions = []
+        teams.forEach(team => {
+            obtions.push({
+                            id: team["id"], 
+                            name:team['name']
+                        })
+        });
+        return obtions;
+    }
+    catch(e){
+        console.error(e)
+        return false;
+    }
+}
 // Socket IO LOGIC.
 var timeDivisor = 100;
 function countDown(namespace){
@@ -299,11 +331,14 @@ io.of((nsp, query, next) => {
             saveAnswer(msg.personID, msg.answerID, msg.timerValue)
             //TODO:: INSERT THE ANSWER AND TIME IN THE DB
         });
+        socket.on('start_round', (msg)=>{
+            console.log(msg)
+        })
   });
-app.get('/user', checkAuthenticated, namespaceExists, async (req, res) => {
+app.get('/user', checkAuthenticated, namespaceExistsAndAllowed, async (req, res) => {
     let user = await req.user
     let nsp = req.query.namespace
-    if(user.role !== 'ROLE_USER'){
+    if(user.role !== 'ROLE_USER' && user.role !== 'ROLE_MULTIMEDIA'){
         res.redirect('/')
     }
     else{
@@ -319,9 +354,10 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
     if(user.role !== 'ROLE_ADMIN'){
         res.redirect('/')
     }
-    else{
-        res.render('admin_room.ejs', {namespace: nsp, pid: user.id})
-    }
+    //get list of teams parsed as obtions for a selector
+    GetTeamsList().then(teams =>{
+        res.render('admin_room.ejs', {namespace: nsp, pid: user.id, teams:teams})
+    })
 })
 
 // END of SOCKET.IO Logic

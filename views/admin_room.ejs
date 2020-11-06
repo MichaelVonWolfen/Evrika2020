@@ -8,23 +8,35 @@
             <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
         </head>
   <body>
-        <h1>Room:<%=namespace%></h1>
+        <h1 id = "namespace"><%=namespace%></h1>
+        <h2 id = "teams_nust_be_choosen">Alege-ti echipele mai intai</h2>
+        <select name="team1" id="team1">
+            <% teams.forEach(function(team){ %>
+                <option value="<%=team.id %>"><%= team.name %></option>
+            <% }) %>
+        </select>
+        <button id="teams_choosen">Confirm</button>
+        <select name="team2" id="team2">
+            <% teams.forEach(function(team){ %>
+                <option value="<%=team.id %>"><%= team.name %></option>
+            <% }) %>
+        </select>
         <h2 id="question">Intrebarea apare aici</h2>
         <input type="hidden" value="<%= namespace %>" id="namespace">
         <input type="hidden" value="<%= pid %>" id="pid">
         
         <!--        <input type="submit" value="Obtine Intrebare" id = 'question' >-->
         <div>
-            <button id="nature">Stiinte ale naturii</button>
-            <button id="quotes">Citate celebre</button>
-            <button id="social">Social Media</button>
-            <button id="movies">Filme si seriale</button>
-            <button id="facts">Fun facts</button>
-            <button id="history">Istorie</button>
-            <button id="geo">Geografie</button>
-            <button id="romanian">Limba si Literarura Romana</button>
-            <button id="music">Muzica</button>
-            <button id="sport">Sport</button>
+            <button id="nature" disabled >Stiinte ale naturii</button>
+            <button id="quotes" disabled >Citate celebre</button>
+            <button id="social" disabled >Social Media</button>
+            <button id="movies" disabled >Filme si seriale</button>
+            <button id="facts" disabled >Fun facts</button>
+            <button id="history" disabled >Istorie</button>
+            <button id="geo" disabled >Geografie</button>
+            <button id="romanian" disabled >Limba si Literarura Romana</button>
+            <button id="music" disabled >Muzica</button>
+            <button id="sport" disabled >Sport</button>
         </div>
         <button id="sendToPlayers" disabled>Send</button>
         <button id="correctAnswer" disabled>Correct Answer</button>

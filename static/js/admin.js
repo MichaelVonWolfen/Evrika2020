@@ -1,4 +1,4 @@
-const socket = io('/' + $('#namespace').val(), 
+const socket = io('/' + $('#namespace').text(), 
     {
         query: {
                 admin: true
@@ -26,6 +26,21 @@ $('button').click(function(){
         socket.emit('question',query(type + 1));
         // $(this).prop('disabled', true);
     }
+});
+$('#teams_choosen').click(function(){
+    let team1ID = $('#team1 option:selected').attr('value')
+    let team2ID = $('#team2 option:selected').attr('value')
+    let namespace = $('#namespace').text();
+    $('#teams_nust_be_choosen').text('');
+    categories.forEach(categorie => {
+        $(`#${categorie}`).attr('disabled', false);
+    });
+    socket.emit("start_round",{
+                                team1: team1ID,
+                                team2: team2ID,
+                                namespace: namespace
+                            });
+
 });
 $('#sendToPlayers').click(function(){
     socket.emit('toPlayers', query(idQuestion));
