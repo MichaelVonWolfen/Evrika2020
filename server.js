@@ -134,7 +134,7 @@ async function GetUserByEmail(email){
         // console.log(user)
         return user
     }catch (e){
-        console.log(e)
+        console.error(e)
     }
 }
 async function GetUserByID(id){
@@ -146,7 +146,7 @@ async function GetUserByID(id){
         // console.log(user)
         return user
     }catch (e){
-        console.log(e)
+        console.error(e)
     }
 }
 function ExtractUser(res){
@@ -171,7 +171,7 @@ async function get_Question(category) {
     let query = `select id, question, times_played from  questions\n 
                 where times_played like (select min(times_played) from questions where  question_type = ${category}) \n order by RAND()\n limit 1;`
     const [quest] = await promisePool.query(query);
-    console.log(quest);
+    // console.log(quest);
     let id = quest[0]['id']
     let question = quest[0]['question']
     let played_times = quest[0]['times_played']
@@ -219,15 +219,16 @@ async function saveAnswer(teamID, ansID, timerValue){
     let wuery = ""
 }
 // Socket IO LOGIC.
+var timeDivisor = 100;
 function countDown(namespace){
     let counter = total_time_allowed + 1;
     let WinnerCountdown = setInterval(function(){
-        counter--
-        io.of(namespace).emit('counter', counter);
-        if (counter === 0) {
+        counter-= 0.1
+        io.of(namespace).emit('counter', Math.ceil(counter * timeDivisor)/timeDivisor);
+        if (counter <= 0.01) {
             clearInterval(WinnerCountdown); 
         }
-    }, 1000);
+    }, timeDivisor);
 }
 io.of((nsp, query, next) => {
     
@@ -237,7 +238,7 @@ io.of((nsp, query, next) => {
         socket.on('toPlayers', (msg)=> {
             let namespace = socket.nsp.name
             get_QuestionAndAnswers(msg).then(answers =>{
-                console.log(answers)
+                // console.log(answers)
                 io.of(namespace).emit('answers', answers);
             });
             countDown(namespace)
