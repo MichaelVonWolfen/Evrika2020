@@ -177,7 +177,7 @@ async function get_Question(msg) {
     let category = msg.id
     let t1 = msg.id_1
     let t2 = msg.id_2
-    console.log(msg)
+    // console.log(msg)
     const promisePool = pool.promise();
     // query database using promises
     let query =`select id, question, times_played from  questions 

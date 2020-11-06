@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
   };
   active_namespaces.init({
     admin_id: DataTypes.INTEGER,
-    namespace_identifier: DataTypes.STRING
+    team1_id: DataTypes.INTEGER,
+    team2_id: DataTypes.INTEGER,
+    namespace_identifier: DataTypes.STRING,
+    is_active: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'active_namespaces',
