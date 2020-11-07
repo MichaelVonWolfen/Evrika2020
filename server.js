@@ -62,6 +62,15 @@ app.post('/login', passport.authenticate('local',{
     failureRedirect:'/login',
     failureFlash: true
 }))
+app.get('/about', (req, res) => {
+    res.render('about.ejs')
+})
+app.get('/home', (req, res) => {
+    res.render('home.ejs')
+})
+app.get('/partners', (req, res) => {
+    res.render('partners.ejs')
+})
 app.get('/register',checkNotAuthenticated, (req, res) => {
     res.render('register.ejs', {error:""})
 })
