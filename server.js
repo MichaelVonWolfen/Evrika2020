@@ -331,8 +331,20 @@ io.of((nsp, query, next) => {
             saveAnswer(msg.personID, msg.answerID, msg.timerValue)
             //TODO:: INSERT THE ANSWER AND TIME IN THE DB
         });
-        socket.on('start_round', (msg)=>{
+        socket.on('start_round', async (msg)=>{
             console.log(msg)
+            let t =[
+                msg.team1,
+                msg.team2
+            ] 
+            let nsp = msg.namespace 
+
+            let nsp_id = (await promisePool.query(`select id from active_namespaces where namespace_identifier like '${nsp}'`))[0][0]['id']
+            for(let i = 0; i < 2; i++){
+                await promisePool.query(`insert into  users_active_namespaces(team_id, active_namespace_id, createdAt, updatedAt)
+                                            values(${t[i]},'${nsp_id}',current_timestamp, current_timestamp)`)
+
+            }
         })
   });
 app.get('/user', checkAuthenticated, namespaceExistsAndAllowed, async (req, res) => {
@@ -347,10 +359,17 @@ app.get('/user', checkAuthenticated, namespaceExistsAndAllowed, async (req, res)
 })
 app.get('/admin', checkAuthenticated, async (req, res) => {
     let user = await req.user
-    let nsp = req.query.namespace
-    if(!nsp)
+    // let nsp = req.query.namespace
+    let nsp
+    let [namespace] = await promisePool.query(`Select namespace_identifier from active_namespaces
+                                            where is_active = 1 and admin_id = ${user.id}`)
+    if(namespace[0])
+        nsp = namespace[0]['namespace_identifier']
+    else{
         nsp = Date.now() + user.id + Math.floor(Math.random() * 10);
-
+        await promisePool.query(`INSERT INTO active_namespaces(admin_id, namespace_identifier, is_active, createdAt, updatedAt)
+                                 values (${user.id}, '${nsp}', 1, current_timestamp, current_timestamp)`)
+    }
     if(user.role !== 'ROLE_ADMIN'){
         res.redirect('/')
     }

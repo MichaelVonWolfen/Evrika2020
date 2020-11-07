@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class active_namespaces extends Model {
+  class users_active_namespaces extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -13,13 +13,12 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
-  active_namespaces.init({
-    admin_id: DataTypes.INTEGER,
-    namespace_identifier: DataTypes.STRING,
-    is_active: DataTypes.BOOLEAN
+  users_active_namespaces.init({
+    team_id: DataTypes.INTEGER,
+    active_namespace_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'active_namespaces',
+    modelName: 'users_active_namespaces',
   });
-  return active_namespaces;
+  return users_active_namespaces;
 };

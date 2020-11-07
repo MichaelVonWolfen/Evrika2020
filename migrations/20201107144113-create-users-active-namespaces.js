@@ -1,22 +1,20 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('active_namespaces', {
+    await queryInterface.createTable('users_active_namespaces', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      admin_id: {
+      team_id: {
         type: Sequelize.INTEGER,
-        references:{model: 'users', key: 'id'}
+        references:{model:'teams',key:'id'}
       },
-      namespace_identifier: {
-        type: Sequelize.STRING
-      },
-      is_active: {
-        type: Sequelize.BOOLEAN
+      active_namespace_id: {
+        type: Sequelize.INTEGER,
+        references:{model:'active_namespaces', key:'id'}
       },
       createdAt: {
         allowNull: false,
@@ -29,6 +27,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('active_namespaces');
+    await queryInterface.dropTable('users_active_namespaces');
   }
 };
