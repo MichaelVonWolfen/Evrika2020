@@ -79,22 +79,30 @@ app.post('/register', async (req, res) => {
         //TODO: Check all the inputs to have text
         let i = 0;
         const hashedPass = await bcrypt.hash(req.body.password, 10)
-        const team_name = req.body.team_name
-        const fname = req.body.first_name
-        const lname = req.body.last_name
-        const email = req.body.email
-        const phone = req.body.phone
-        const college = req.body.college
+        const team_name = req.body.teamName
+        const fname1 = req.body.firstName1
+        const lname1 = req.body.lastName1
+        const email1 = req.body.email1
+        const phone1 = req.body.phone1
+        const college1 = req.body.faculty1
+        const fname2 = req.body.firstName2
+        const lname2 = req.body.lastName2
+        const email2 = req.body.email2
+        const phone2 = req.body.phone2
+        const college2 = req.body.faculty2
 
         const promisePool = pool.promise();
         let [team] = await promisePool.query(`Select name from teams where name like lower('${team_name}')`);
         if(team[0]){
             //DONE: show error message
+            console.log('Error 1')
             return res.render('register.ejs',{error:"Team already exists."});
         }
         //TODO: ADD team in the DB and the members
-        let [user] = await promisePool.query(`Select email from users where email like lower('${email}')`)
-        if(user[0]){
+        let [user1] = await promisePool.query(`Select email from users where email like lower('${email1}')`)
+        let [user2] = await promisePool.query(`Select email from users where email like lower('${email2}')`)
+        if(user1[0] || user2[0]){
+            console.log('Error 2')
             return res.render('register.ejs',{error:`Email ${email} already used.`});
         }
         await promisePool.query(`INSERT into teams(NAME, ROLE, CREATEDAT, UPDATEDAT) 
@@ -103,9 +111,11 @@ app.post('/register', async (req, res) => {
 
         const id = team[0]['id'];
         await promisePool.query(`insert into users(first_name, last_name, email, password, phone, faculty, team_id, role, createdAt, updatedAt)
-                                        values ('${fname}', '${lname}', lower('${email}'), '${hashedPass}','${phone}', '${college}','${id}',
+                                        values ('${fname1}', '${lname1}', lower('${email1}'), '${hashedPass}','${phone1}', '${college1}','${id}',
                                         'ROLE_USER', current_timestamp, current_timestamp)`);
-
+        await promisePool.query(`insert into users(first_name, last_name, email, password, phone, faculty, team_id, role, createdAt, updatedAt)
+                                        values ('${fname2}', '${lname2}', lower('${email2}'), '${hashedPass}','${phone2}', '${college2}','${id}',
+                                        'ROLE_USER', current_timestamp, current_timestamp)`);
         res.redirect('/login');
 
     }catch (e){
