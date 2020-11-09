@@ -28,6 +28,7 @@ const promisePool = pool.promise();
 
 const initializePassport = require('./passport-config');
 const { exception } = require('console');
+const { promiseImpl } = require('ejs');
 initializePassport(
     passport,
     email => GetUserByEmail(email),
@@ -332,20 +333,31 @@ io.of((nsp, query, next) => {
             //TODO:: INSERT THE ANSWER AND TIME IN THE DB
         });
         socket.on('start_round', async (msg)=>{
-            console.log(msg)
-            let t =[
-                msg.team1,
-                msg.team2
-            ] 
-            let nsp = msg.namespace 
+            try{
 
-            let nsp_id = (await promisePool.query(`select id from active_namespaces where namespace_identifier like '${nsp}'`))[0][0]['id']
-            for(let i = 0; i < 2; i++){
-                await promisePool.query(`insert into  users_active_namespaces(team_id, active_namespace_id, createdAt, updatedAt)
-                                            values(${t[i]},'${nsp_id}',current_timestamp, current_timestamp)`)
-
+                let t =[
+                    msg.team1,
+                    msg.team2
+                ] 
+                let nsp = msg.namespace 
+                
+                let nsp_id = (await promisePool.query(`select id from active_namespaces where namespace_identifier like '${nsp}'`))[0][0]['id']
+                for(let i = 0; i < 2; i++){
+                    await promisePool.query(`insert into  users_active_namespaces(team_id, active_namespace_id, createdAt, updatedAt)
+                    values(${t[i]},'${nsp_id}',current_timestamp, current_timestamp)`)
+                    
+                }
+            }catch(e){
+                console.error(e)
             }
         })
+        socket.on('newSession', async (msg) =>{
+            try{
+                await promisePool.query(`Update active_namespaces set is_active = 0 where namespace_identifier like ${msg}`)
+            }catch(e){
+                console.error(e)
+            }
+        });
   });
 app.get('/user', checkAuthenticated, namespaceExistsAndAllowed, async (req, res) => {
     let user = await req.user

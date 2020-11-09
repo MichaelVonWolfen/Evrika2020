@@ -51,7 +51,8 @@ $('#correctAnswer').click(function(){
     socket.emit('correctAnswer', '');
 });
 $('#startSession').click(function(){
-    socket.emit("start", 'New Round!');
+    socket.emit("newSession", $('#namespace').text());
+    location.reload()
 });
 $('#member_11').click(function(){
     king_team1 = $(this).attr('name');
