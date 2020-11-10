@@ -62,7 +62,9 @@ jQuery(function() {
 		enable_buttons()
 		let king = $('#pid').attr('value')
 	})
-
+	socket.on('allAnswers', (msg)=>{
+		console.log(msg)
+	})
 	$('#button0,#button1,#button2,#button3').on("click", function(){
 		refresh_selected(this);
 	});
