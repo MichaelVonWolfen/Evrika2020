@@ -354,7 +354,7 @@ io.of((nsp, query, next) => {
         });
         socket.on('start_round', async (msg)=>{
             try{
-
+                console.log(msg)
                 let t =[
                     msg.team1,
                     msg.team2
@@ -364,20 +364,24 @@ io.of((nsp, query, next) => {
                 let teams = []
                 let nsp_id = (await promisePool.query(`select id from active_namespaces where namespace_identifier like '${nsp}'`))[0][0]['id']
                 for(let i = 0; i < 2; i++){
-                    await promisePool.query(`insert into  users_active_namespaces(team_id, active_namespace_id, createdAt, updatedAt)
-                    values(${t[i]},'${nsp_id}',current_timestamp, current_timestamp)`)
-                    let [team] = await promisePool.query(`Select t.id teamID, t.name as teamName, u.id as userID, concat(u.first_name, ' ', u.last_name) as name, t.role
-                                                          from teams t join users u on t.id = u.team_id
-                                                          where t.id = ${t[i]}`)
-                    team.forEach(member => {
-                        teams.push({
-                            teamID : member['teamID'],
-                            teamName : member['teamName'],
-                            userName : member['name'],
-                            uID : member['userID']
-                        })
-                    });
+                    await promisePool.query(`insert into  users_active_namespaces(team_id, active_namespace_id, createdAt, updatedAt, corect_answers, total_points)
+                                                values(${t[i]},'${nsp_id}',current_timestamp, current_timestamp, 0, 0)`)
                 }
+                let [team] = await promisePool.query(`select t.id teamID, t.name as teamName, u.id as userID, concat(u.first_name, ' ', u.last_name) as name, t.role, uan.total_points
+                                                        from users_active_namespaces uan join teams t on uan.team_id = t.id join users u on t.id = u.team_id
+                                                        WHERE active_namespace_id = (select id from active_namespaces an where an.is_active = 1 
+                                                                                        and namespace_identifier like '${nsp}');`)
+                console.log('Echipa')
+                console.log(team)
+                team.forEach(member => {
+                    teams.push({
+                        teamID : member['teamID'],
+                        teamName : member['teamName'],
+                        userName : member['name'],
+                        uID : member['userID'],
+                        TotalPoints : member['total_points']
+                    })
+                });
                 socket.emit('TeamsMembers', teams)
             }catch(e){
                 console.error(e)
@@ -390,6 +394,19 @@ io.of((nsp, query, next) => {
                 console.error(e)
             }
         });
+        socket.on('UpdateScores', async (msg)=>{
+            console.log(msg);
+            try{
+                await promisePool.query(`Update users_active_namespaces set total_points = ${msg.scorTeam1}
+                                        where active_namespace_id = (select id from active_namespaces id where namespace_identifier like '${msg.namespace}')
+                                        and team_id = (select users.team_id from users where users.id = ${msg.userTeam1})`)
+                await promisePool.query(`Update users_active_namespaces set total_points = ${msg.scorTeam2}
+                                        where active_namespace_id = (select id from active_namespaces id where namespace_identifier like '${msg.namespace}')
+                                        and team_id = (select users.team_id from users where users.id = ${msg.userTeam2})`)
+            }catch(e){
+                console.error(e)
+            }
+        })
   });
 app.get('/user', checkAuthenticated, namespaceExistsAndAllowed, async (req, res) => {
     let user = await req.user

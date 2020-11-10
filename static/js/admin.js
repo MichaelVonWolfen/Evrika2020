@@ -78,6 +78,26 @@ $('#member_22').click(function(){
     $(this).addClass('king');
     $('#member_21').removeClass('king');
 });
+$('#UpdateScor').click(()=>{
+    let scort1 = $('#scoreTeam1').val()
+    let scort2 = $('#scoreTeam2').val()
+    if (!scort1 || !scort2){
+        alert("Este ceva in neregula cu scorurile");
+    }
+    else{
+        if(king_team1 && king_team2){
+            socket.emit('UpdateScores',{
+                namespace: $('#namespace').text(),
+                userTeam1: king_team1,
+                scorTeam1: scort1,
+                userTeam2: king_team2,
+                scorTeam2: scort2
+            })
+        }else{
+            alert("Nu au fost alese persoanele care sa raspunda la intrebari!")
+        }
+    }
+})
 
 
 socket.on('rasp',function(msg){
@@ -91,11 +111,12 @@ socket.on('counter', function(count){
     $('#timer').text(count);
 });
 socket.on('TeamsMembers',(msg)=>{
+    console.log(msg)
     for(let i = 0; i < 4; i++){
         let member = msg[i];
-        console.log(member);
         let team = 0;
         let mbID = 0;
+        let points = 0;
         if(i < 2){
             team = 1;
         }else{
@@ -109,5 +130,6 @@ socket.on('TeamsMembers',(msg)=>{
      $(`#teamid_${team}`).text(member['teamName']);
      $(`#member_${team}${mbID}`).text(member['userName']);
      $(`#member_${team}${mbID}`).attr('name', member['uID']);
+     $(`#scoreTeam${team}`).attr('value', member['TotalPoints']);
     }
 })

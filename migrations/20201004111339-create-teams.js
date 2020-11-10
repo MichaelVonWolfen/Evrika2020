@@ -20,7 +20,7 @@ module.exports = {
       total_time: {
         type: Sequelize.STRING
       },
-      corecte_answers: {
+      corect_answers: {
         type: Sequelize.INTEGER
       },
       total_points: {
