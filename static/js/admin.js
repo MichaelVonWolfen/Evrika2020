@@ -23,7 +23,11 @@ function query(data){
 $('button').click(function(){
     let type = categories.indexOf($(this).attr('id'));
     if(type !== -1){
-        socket.emit('question',query(type + 1));
+        socket.emit('question',{
+            id: type + 1,
+            id_1: king_team1,
+            id_2: king_team2
+        })
         // $(this).prop('disabled', true);
     }
 });
@@ -86,3 +90,24 @@ socket.on('rasp',function(msg){
 socket.on('counter', function(count){
     $('#timer').text(count);
 });
+socket.on('TeamsMembers',(msg)=>{
+    for(let i = 0; i < 4; i++){
+        let member = msg[i];
+        console.log(member);
+        let team = 0;
+        let mbID = 0;
+        if(i < 2){
+            team = 1;
+        }else{
+            team = 2;
+        }
+        if(i % 2 === 0){
+            mbID = 1;
+        }else{
+            mbID = 2;
+        }
+     $(`#teamid_${team}`).text(member['teamName']);
+     $(`#member_${team}${mbID}`).text(member['userName']);
+     $(`#member_${team}${mbID}`).attr('name', member['uID']);
+    }
+})

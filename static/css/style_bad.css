@@ -176,7 +176,9 @@ body {
 .accountBtn:hover {
     background-color: #C49FCA;
 }
-
+.king{
+    color:red
+}
 @media only screen and (max-width: 767px) {
     /* body {
         background-image: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.3)), url(icons/-\ fall\ mood\ -\ -\ mayaruth\ on\ pinterest\ -.jpg);

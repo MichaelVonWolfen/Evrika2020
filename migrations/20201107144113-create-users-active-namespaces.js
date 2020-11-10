@@ -16,6 +16,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         references:{model:'active_namespaces', key:'id'}
       },
+      corecte_answers: {
+        type: Sequelize.INTEGER,
+      },
+      total_points: {
+        type: Sequelize.INTEGER,
+        default:0
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

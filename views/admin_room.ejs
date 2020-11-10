@@ -42,21 +42,27 @@
         <button id="correctAnswer" disabled>Correct Answer</button>
         <button id="startSession">Runda Noua</button>
         <div>
-            <p id="teamid_1">Team Name</p>
+            <p>Echipa 1:</p>
+            <p id="teamid_1" class="king">Team Name</p>
             <p>Member 1:</p>
-            <p id="member_11" name = "4" class="king">Teammate1</p>
+            <p id="member_11" name = "4" >Teammate1</p>
             <p>Member 2:</p>
             <p id="member_12" name = "4">Teammate2</p>
+            <p>Punctaj total:</p>
+            <input type="number" id="scoreTeam1" name="quantity" min="0" max="30">
         </div>
         <div>
             Timer:<p id = "timer"> </p>
         </div>
         <div>
-            <p id="teamid_2">Team Name</p>
+            <p>Echipa 2:</p>
+            <p id="teamid_2" class="king">Team Name</p>
             <p>Member 1:</p>
             <p id="member_21" name = "4">Teammate1</p>
             <p>Member 2:</p>
             <p id="member_22" name = "4">Teammate2</p>
+            <p>Punctaj total:</p>
+            <input type="number" id="scoreTeam2" name="quantity" min="0" max="30">
         </div>
         <a href="http://localhost:3000/user?namespace=<%= namespace %>">http://localhost:3000/user?namespace=<%= namespace %></a>
         <div id = "good_response">

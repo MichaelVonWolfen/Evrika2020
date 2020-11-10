@@ -126,23 +126,19 @@ function checkNotAuthenticated(req, res, next){
 }
 async function namespaceExistsAndAllowed(req, res, next){
     // if namespace exists and team is allowed or multimedia then allow them to acces the page.
-    let namespace = req.query.namespace
+    let nsp = req.query.namespace
+    
     try{
-        let [hasAdmin] = await promisePool.query(`SELECT team1_id as t1, team2_id as t2 from active_namespaces where namespace_identifier like '${namespace}'`)
-
-        if(hasAdmin.length === 0)
-            return res.redirect('/404')
-        let team1 = hasAdmin[0]["t1"]
-        let team2 = hasAdmin[0]["t2"]
         let user = await req.user
-        let userTeam = user.team_id
-
-        if(userTeam !== team1 && userTeam !== team2 && user.role !== 'ROLE_MULTIMEDIA')
+        if(user.role === 'ROLE_MULTIMEDIA')
+            next()
+        let [acces] = await promisePool.query(`Select 'true' from users_active_namespaces uan join active_namespaces an on uan.active_namespace_id = an.id
+                                                where is_active = 1 and  namespace_identifier like '${nsp}' and team_id = ${user.team_id};`)
+        if(acces.length === 0)
             return res.redirect('/404')
-
-
     }catch (e){
         console.error(e)
+        return res.redirect('/404')
     }
     next()
 }
@@ -185,41 +181,46 @@ function ExtractUser(res){
     return user;
 }
 async function get_Question(msg) {
-    // create the pool
-    // now get a Promise wrapped instance of that pool
-    let category = msg.id
-    let t1 = msg.id_1
-    let t2 = msg.id_2
-    // console.log(msg)
-    const promisePool = pool.promise();
-    // query database using promises
-    let query =`select id, question, times_played from  questions 
+    try{
+        console.log(msg)
+        // create the pool
+        // now get a Promise wrapped instance of that pool
+        let category = msg.id
+        let t1 = msg.id_1
+        let t2 = msg.id_2
+        // console.log(msg)
+        const promisePool = pool.promise();
+        // query database using promises
+        let query =`select id, question, times_played from  questions 
                 where times_played like (
-                                            Select min(times_played) from questions 
+                    Select min(times_played) from questions 
                                             where  question_type = ${category}
                                         ) AND
-                        id not in (
+                                        id not in (
                                     Select question_id from answers_recieved
                                     where team_id in (
-                                                        Select team_id from users
-                                                        where id in (${t1}, ${t2})
-                                                    )
-                                    )
-                order by RAND()
-                limit 1;`
-    const [quest] = await promisePool.query(query);
-    // console.log(quest);
-    let id = quest[0]['id']
-    let question = quest[0]['question']
-    let played_times = quest[0]['times_played']
-
-    let question_JSON = {
-        'id' : id,
-        'question': question
-    };
-    await promisePool.query(`UPDATE questions set times_played = ${played_times + 1} where id = ${id}`);
-    return question_JSON;
-
+                                        Select team_id from users
+                                        where id in (${t1}, ${t2})
+                                        )
+                                        )
+                                        order by RAND()
+                                        limit 1;`
+        const [quest] = await promisePool.query(query);
+        // console.log(quest);
+        let id = quest[0]['id']
+        let question = quest[0]['question']
+        let played_times = quest[0]['times_played']
+        
+        let question_JSON = {
+            'id' : id,
+            'question': question
+        };
+        await promisePool.query(`UPDATE questions set times_played = ${played_times + 1} where id = ${id}`);
+        return question_JSON;
+                                        
+    }catch(e){
+        console.error(e)
+    }
 }
 async function get_QuestionAndAnswers(queryBig) {
     // create the pool
@@ -341,12 +342,24 @@ io.of((nsp, query, next) => {
                 ] 
                 let nsp = msg.namespace 
                 
+                let teams = []
                 let nsp_id = (await promisePool.query(`select id from active_namespaces where namespace_identifier like '${nsp}'`))[0][0]['id']
                 for(let i = 0; i < 2; i++){
                     await promisePool.query(`insert into  users_active_namespaces(team_id, active_namespace_id, createdAt, updatedAt)
                     values(${t[i]},'${nsp_id}',current_timestamp, current_timestamp)`)
-                    
+                    let [team] = await promisePool.query(`Select t.id teamID, t.name as teamName, u.id as userID, concat(u.first_name, ' ', u.last_name) as name, t.role
+                                                          from teams t join users u on t.id = u.team_id
+                                                          where t.id = ${t[i]}`)
+                    team.forEach(member => {
+                        teams.push({
+                            teamID : member['teamID'],
+                            teamName : member['teamName'],
+                            userName : member['name'],
+                            uID : member['userID']
+                        })
+                    });
                 }
+                socket.emit('TeamsMembers', teams)
             }catch(e){
                 console.error(e)
             }
@@ -362,6 +375,8 @@ io.of((nsp, query, next) => {
 app.get('/user', checkAuthenticated, namespaceExistsAndAllowed, async (req, res) => {
     let user = await req.user
     let nsp = req.query.namespace
+
+
     if(user.role !== 'ROLE_USER' && user.role !== 'ROLE_MULTIMEDIA'){
         res.redirect('/')
     }
@@ -373,17 +388,17 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
     let user = await req.user
     // let nsp = req.query.namespace
     let nsp
+    if(user.role !== 'ROLE_ADMIN'){
+        res.redirect('/')
+    }
     let [namespace] = await promisePool.query(`Select namespace_identifier from active_namespaces
                                             where is_active = 1 and admin_id = ${user.id}`)
-    if(namespace[0])
+    if(namespace[0]){
         nsp = namespace[0]['namespace_identifier']
-    else{
+    }else{
         nsp = Date.now() + user.id + Math.floor(Math.random() * 10);
         await promisePool.query(`INSERT INTO active_namespaces(admin_id, namespace_identifier, is_active, createdAt, updatedAt)
                                  values (${user.id}, '${nsp}', 1, current_timestamp, current_timestamp)`)
-    }
-    if(user.role !== 'ROLE_ADMIN'){
-        res.redirect('/')
     }
     //get list of teams parsed as obtions for a selector
     GetTeamsList().then(teams =>{

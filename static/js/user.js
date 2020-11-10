@@ -51,6 +51,7 @@ jQuery(function() {
 	var idQuestion;
 	socket.on('counter', function(count){
 		$('#timer').text(count);
+		console.log(count)
 	});
 	socket.on('answers', (msg) =>{
 		$('#question').text(msg.question)
