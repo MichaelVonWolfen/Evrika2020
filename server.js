@@ -309,6 +309,25 @@ async function GetTeamsList(){
         return false;
     }
 }
+async function GetTeamsInNamespaceDetails(nsp){
+    let [team] = await promisePool.query(`select t.id teamID, t.name as teamName, u.id as userID, concat(u.first_name, ' ', u.last_name) as name, t.role, uan.total_points
+                                                        from users_active_namespaces uan join teams t on uan.team_id = t.id join users u on t.id = u.team_id
+                                                        WHERE active_namespace_id = (select id from active_namespaces an where an.is_active = 1 
+                                                                                        and namespace_identifier like '${nsp}');`)
+    let teams = []
+    // console.log('Echipa')
+    // console.log(team)
+    team.forEach(member => {
+        teams.push({
+            teamID : member['teamID'],
+            teamName : member['teamName'],
+            userName : member['name'],
+            uID : member['userID'],
+            TotalPoints : member['total_points']
+        })
+    });
+    return teams
+}
 // Socket IO LOGIC.
 var timeDivisor = 100;
 function countDown(namespace){
@@ -361,28 +380,15 @@ io.of((nsp, query, next) => {
                 ] 
                 let nsp = msg.namespace 
                 
-                let teams = []
                 let nsp_id = (await promisePool.query(`select id from active_namespaces where namespace_identifier like '${nsp}'`))[0][0]['id']
                 for(let i = 0; i < 2; i++){
                     await promisePool.query(`insert into  users_active_namespaces(team_id, active_namespace_id, createdAt, updatedAt, corect_answers, total_points)
-                                                values(${t[i]},'${nsp_id}',current_timestamp, current_timestamp, 0, 0)`)
+                    values(${t[i]},'${nsp_id}',current_timestamp, current_timestamp, 0, 0)`)
                 }
-                let [team] = await promisePool.query(`select t.id teamID, t.name as teamName, u.id as userID, concat(u.first_name, ' ', u.last_name) as name, t.role, uan.total_points
-                                                        from users_active_namespaces uan join teams t on uan.team_id = t.id join users u on t.id = u.team_id
-                                                        WHERE active_namespace_id = (select id from active_namespaces an where an.is_active = 1 
-                                                                                        and namespace_identifier like '${nsp}');`)
-                console.log('Echipa')
-                console.log(team)
-                team.forEach(member => {
-                    teams.push({
-                        teamID : member['teamID'],
-                        teamName : member['teamName'],
-                        userName : member['name'],
-                        uID : member['userID'],
-                        TotalPoints : member['total_points']
-                    })
-                });
-                socket.emit('TeamsMembers', teams)
+                GetTeamsInNamespaceDetails(nsp).then((teams) =>{
+                    socket.emit('TeamsMembers', teams)
+                })
+                
             }catch(e){
                 console.error(e)
             }
@@ -403,6 +409,30 @@ io.of((nsp, query, next) => {
                 await promisePool.query(`Update users_active_namespaces set total_points = ${msg.scorTeam2}
                                         where active_namespace_id = (select id from active_namespaces id where namespace_identifier like '${msg.namespace}')
                                         and team_id = (select users.team_id from users where users.id = ${msg.userTeam2})`)
+            }catch(e){
+                console.error(e)
+            }
+        })
+        socket.on('get_namespace_load_status', async (msg)=>{
+            try{
+                console.log(msg)
+                let [teams] = await promisePool.query(`select uan.team_id from active_namespaces an join users_active_namespaces uan on an.id = uan.active_namespace_id
+                                                         where namespace_identifier like '${msg}'`)
+                console.log(teams)
+                if(teams.length === 0){
+                    return
+                }else{
+                    let team1 = teams[0]['team_id']
+                    let team2 = teams[1]['team_id']
+                    if(team1 && team2){
+                        console.log(team1 + ' ' + team2)
+                        GetTeamsInNamespaceDetails(msg).then((teams) =>{
+                            console.log(teams)
+                            socket.emit('TeamsMembers', teams)
+                        })
+                    }
+                }
+
             }catch(e){
                 console.error(e)
             }
