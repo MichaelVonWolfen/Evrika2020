@@ -77,7 +77,9 @@ jQuery(function() {
 		let king = $('#pid').attr('value')
 		curr_time = -1;
 	})
-
+	socket.on('allAnswers', (msg)=>{
+		console.log(msg)
+	})
 	$('#button0,#button1,#button2,#button3').on("click", function(){
 		refresh_selected();
 		$(this).addClass('selected');
