@@ -133,6 +133,9 @@ jQuery(function() {
             $(`#member_${team}${mbID}`).text(member['userName']);
             $(`#member_${team}${mbID}`).attr('name', member['uID']);
             $(`#scoreTeam${team}`).attr('value', member['TotalPoints']);
+            $('#team1').prop('disabled', true);
+            $('#team2').prop('disabled', true);
+            $('#teams_choosen').prop('disabled', true);
         }
     })
 });
