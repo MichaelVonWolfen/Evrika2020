@@ -1,19 +1,35 @@
 if(process.env.NODE_ENV !== 'production'){
     require('dotenv').config()
 }
-const port = 3000;
+const port = process.env["PORT"]
 const total_time_allowed = 15; //Time allowed to respond to a question
 const categories_total = 10; //Number of total questions
 const path = require('path')
 const express = require('express')
 const app = express()
 const bcrypt = require('bcrypt')
+const fs = require('fs');
 const passport = require('passport')
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+const https = require('https');
 
-const server =require("http").createServer(app);
+function requireHTTPS(req, res, next) {
+    // The 'x-forwarded-proto' check is for Heroku
+    if (!req.secure) {
+      return res.redirect('https://' + req.get('host') + req.url);
+    }
+    next();
+  }
+
+app.use(requireHTTPS);
+
+const server = https.createServer({
+    key: fs.readFileSync(process.env["SSL_KEY"]),
+    cert: fs.readFileSync(process.env["SSL_CERT"])
+  }, app);
+
 const io = require("socket.io")(server);
 
 const mysql = require('mysql2');
@@ -488,4 +504,12 @@ app.post('*', (req, res) => {
 
 server.listen(port, () => {
     console.log(`application is running at: http://localhost:${port}`);
+});
+
+app.enable('trust proxy');
+app.use(function(req, res, next) {
+    if (req.secure){
+        return next();
+    }
+    res.redirect("https://" + req.headers.host + req.url);
 });
