@@ -10,6 +10,18 @@ body {
     background-image: url("../imagini/Background.svg") !important;
 }
 
+.correctAnswer {
+    border: 5px outset #a9d000 !important;
+}
+
+.team2Selected {
+    background: transparent #fed000;
+}
+
+.bothSelected {
+    background: transparent linear-gradient(272deg, #fed000 50%, #3B55FF 51%) 0% 0% no-repeat padding-box;
+}
+
 .selected {
     background: transparent linear-gradient(272deg, #630B7F 0%, #3B55FF 100%) 0% 0% no-repeat padding-box;
 }
