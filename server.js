@@ -108,7 +108,7 @@ app.post('/register', async (req, res) => {
             return res.render('register.ejs',{error:`Email ${email} already used.`});
         }
         await promisePool.query(`INSERT into teams(NAME, ROLE, CREATEDAT, UPDATEDAT) 
-                                VALUES(lower(), 'ROLE_USER', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());`, [team_name]);
+                                VALUES(lower(?), 'ROLE_USER', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());`, [team_name]);
         [team] = await promisePool.query(`Select id from teams where name like ?`, [team_name]);
 
         const id = team[0]['id'];
