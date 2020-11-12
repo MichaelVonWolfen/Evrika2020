@@ -25,12 +25,14 @@ jQuery(function() {
     $('button').click(function(){
         let type = categories.indexOf($(this).attr('id'));
         if(type !== -1){
-            socket.emit('question',{
-                id: type + 1,
-                id_1: king_team1,
-                id_2: king_team2
-            })
-            $(this).prop('disabled', true);
+            if(king_team1 && king_team2){
+                socket.emit('question',{
+                    id: type + 1,
+                    id_1: king_team1,
+                    id_2: king_team2
+                })
+                $(this).prop('disabled', true);
+            }else alert('Trebuie alese persoanele care pot sa raspunda la intrebari.')
         }
     });
     $('#teams_choosen').click(function(){
@@ -49,7 +51,19 @@ jQuery(function() {
         
     });
     socket.on('allAnswers', (msg)=>{
-        console.log(msg)
+        // console.log(msg)
+        let IDanswerTeam1 = msg.IDanswerTeam1
+        let IDanswerTeam2 = msg.IDanswerTeam2
+        let Team1Name = msg.Team1Name
+        let Team1ValueAnswer = msg.Team1ValueAnswer
+        let Team2Name = msg.Team2Name
+        let Team2ValueAnswer = msg.Team2ValueAnswer
+        let answer_correctID = msg.answer_correctID
+        let answer_correctValue = msg.answer_correctValue
+        $('#P-correctAnswer').empty();
+        $('#P-correctAnswer').append(`<p>Echipa ${Team1Name} a raspuns: ${Team1ValueAnswer}</p>`)
+        $('#P-correctAnswer').append(`<p>Echipa ${Team2Name} a raspuns: ${Team2ValueAnswer}</p>`)
+        $('#P-correctAnswer').append(`<p>Raspunsul corect este: ${answer_correctValue}</p>`)
     })
     $('#sendToPlayers').click(function(){
         socket.emit('toPlayers', query(idQuestion));
@@ -143,6 +157,10 @@ jQuery(function() {
             $('#team1').prop('disabled', true);
             $('#team2').prop('disabled', true);
             $('#teams_choosen').prop('disabled', true);
+            $('#teams_nust_be_choosen').text('');
+            categories.forEach(categorie => {
+                $(`#${categorie}`).attr('disabled', false);
+            });
         }
     })
 });

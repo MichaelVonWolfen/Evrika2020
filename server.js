@@ -212,18 +212,14 @@ async function get_Question(msg) {
         // query database using promises
         let query =`select id, question, times_played from  questions 
                 where times_played like (
-                    Select min(times_played) from questions 
-                                            where  question_type = ${category}
-                                        ) AND
-                                        id not in (
-                                    Select question_id from answers_recieved
-                                    where team_id in (
-                                        Select team_id from users
-                                        where id in (${t1}, ${t2})
-                                        )
-                                        )
-                                        order by RAND()
-                                        limit 1;`
+                                           Select min(times_played) from questions where  question_type = ${category}
+                                        ) 
+                AND id not in (
+                                 Select question_id from answers_recieved where team_id in ( Select team_id from users where id in (${t1}, ${t2}))
+                                )
+                AND question_type = ${category}
+                order by RAND()
+                limit 1;`
         const [quest] = await promisePool.query(query);
         // console.log(quest);
         let id = quest[0]['id']
@@ -272,6 +268,7 @@ async function get_QuestionAndAnswers(queryBig) {
 
 }
 async function saveAnswer(userID, ansID, timerValue){
+    console.log(`Save Answer este apelat`)
     try{
         let time = total_time_allowed - timerValue;
         let query = `Select team_id from users where id  = ${userID}`
@@ -361,7 +358,10 @@ io.of((nsp, query, next) => {
                 if(msg.id < 0 || msg.id > categories_total){
                     socket.emit('error', 'Error! No question category that high/low!');
                 }else{
-                    get_Question(msg).then(r => socket.emit('rasp',r));
+                    get_Question(msg).then(r => {
+                        console.log(r)
+                        socket.emit('rasp',r)
+                    });
                 }
             }
             
