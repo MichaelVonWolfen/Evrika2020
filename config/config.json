@@ -1,10 +1,13 @@
 {
   "development": {
-    "username": "root",
-    "password": "Salamandra#1",
-    "database": "evryka_dev",
+    "username": "evrika",
+    "password": "evrika2020",
+    "database": "evrika_2020_finala",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "dialect": "mysql",
+    "dialectOptions": {
+       "socketPath": "/var/run/mysqld/mysqld.sock"
+    }
   },
   "test": {
     "username": "root",
