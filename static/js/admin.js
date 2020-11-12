@@ -48,13 +48,19 @@ jQuery(function() {
         });
         
     });
+    socket.on('allAnswers', (msg)=>{
+        console.log(msg)
+    })
     $('#sendToPlayers').click(function(){
         socket.emit('toPlayers', query(idQuestion));
         $('#sendToPlayers').prop('disabled', true);
         $('#correctAnswer').prop('disabled', false);
     });
     $('#correctAnswer').click(function(){
-        socket.emit('correctAnswer', '');
+        socket.emit('correctAnswer', {
+                                        namespace: $('#namespace').text(),
+                                        question_id:idQuestion
+                                    });
     });
     $('#startSession').click(function(){
         socket.emit("newSession", $('#namespace').text());
@@ -100,6 +106,7 @@ jQuery(function() {
             }
         }
     })
+        
     
     
     socket.on('rasp',function(msg){
