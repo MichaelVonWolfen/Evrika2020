@@ -125,7 +125,13 @@ jQuery(function() {
     
     socket.on('rasp',function(msg){
         idQuestion = msg['id'];
-        $('#question').text(msg['question']);
+        let answer_array = msg['answers']
+        let answer_text = ""
+        answer_array.forEach(answer => {
+            answer_text += `|   ${answer}   |`
+        });
+        $('#question').empty();
+        $('#question').append(`<h2>${msg['question']}</h2><h3>${answer_text}</h3>`);
         $('#sendToPlayers').prop('disabled', false);
         $('#correctAnswer').prop('disabled', true);
         

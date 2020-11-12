@@ -226,9 +226,15 @@ async function get_Question(msg) {
         let question = quest[0]['question']
         let played_times = quest[0]['times_played']
         
+        const [answers] = await promisePool.query(`Select id, answer from answers where question_id = ${id} order by rand()`);
+        let answer_array = []
+        answers.forEach(answer => {
+           answer_array.push(answer['answer'])
+        });
         let question_JSON = {
             'id' : id,
-            'question': question
+            'question': question,
+            'answers' : answer_array
         };
         await promisePool.query(`UPDATE questions set times_played = ${played_times + 1} where id = ${id}`);
         return question_JSON;
