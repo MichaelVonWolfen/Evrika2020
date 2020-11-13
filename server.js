@@ -448,8 +448,9 @@ io.of((nsp, query, next) => {
                             where an.namespace_identifier like ? and ar.question_id = ?`, [msg.namespace, msg.question_id])
                 
                 let response = {}
+                console.log(teams_answers)
                 for(let i = 1; i <=2; i++){
-                    if(teams_answers[i]){
+                    if(teams_answers[i - 1]){
                         response[`IDanswerTeam${i}`] = teams_answers[i - 1]['answer_id']
                         response[`Team${i}ValueAnswer`] = teams_answers[i - 1]['answer']
                         response[`Team${i}Name`] = teams_answers[i - 1]['name']
