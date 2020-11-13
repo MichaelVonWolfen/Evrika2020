@@ -37,9 +37,9 @@ body {
 
 }
 
-#submit {
+/* #submit {
     background-color: #3B55FF !important;
-}
+} */
 
 #seconds {
     margin: 0px;
@@ -206,7 +206,19 @@ body {
 .accountBtn:hover {
     background-color: #C49FCA;
 }
-
+.responseBtn{
+    background: transparent linear-gradient(258deg, #F7971E 0%, #F89B1C 48%, #FFD200 100%) 0% 0% no-repeat padding-box;
+    border-radius: 18px;
+    opacity: 1;
+    width: 150px;
+}
+.responseBtn.disabled{
+    background: #d8d8d8 !important;
+    color: white !important;
+}
+.centerBtn{
+    text-align: center;
+}
 @media only screen and (max-width: 767px) {
     /* body {
         background-image: linear-gradient(rgba(0, 0, 0, 0.3),rgba(0, 0, 0, 0.3)), url(icons/-\ fall\ mood\ -\ -\ mayaruth\ on\ pinterest\ -.jpg);

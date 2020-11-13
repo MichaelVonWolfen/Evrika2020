@@ -2,10 +2,11 @@
 <html>
 <head>
     <title>Socket.IO chat</title>
-    <link href="css/user_room.css" rel="stylesheet" />
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     <link rel="stylesheet" type="text/css" href="css/materialize.min.css" />
+    <link href="css/user_room.css" rel="stylesheet" />
+
     <script src="js/materialize.min.js"></script>
     <script src="https://kit.fontawesome.com/a85a75ed5d.js" crossorigin="anonymous"></script>
 </head>
@@ -62,9 +63,9 @@
                         </div>
                         
                     </div>
-                    <button id="submit" class="btn waves-effect waves-light center" type="submit" name="action">
-                        <i class="material-icons right">Raspunde</i>
-                    </button>
+                    <div class="centerBtn">
+                        <button id="submit" class="btn-large responseBtn" type="submit" name="action">Raspunde</button>
+                    </div>
                 </div>
         </div>
     </div>

@@ -35,6 +35,7 @@ jQuery(function() {
 		for(let i = 0; i<4; i++){
 			$(`#button${i}`).attr('name',msg.answers[i].name);
 			$(`#button${i}`).text(msg.answers[i].text);
+			// console.log(msg.answers[i])
 		}
 
 		if(king == msg.kings[0] || king == msg.kings[1]) {
