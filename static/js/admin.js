@@ -77,8 +77,11 @@ jQuery(function() {
                                     });
     });
     $('#startSession').click(function(){
-        socket.emit("newSession", $('#namespace').text());
-        location.reload()
+        let r = confirm("Te vei deconecta de la camera curenta.\n Esti sigur\\a?");
+        if(r){
+            socket.emit("newSession", $('#namespace').text());
+            location.reload()
+        }
     });
     $('#member_11').click(function(){
         king_team1 = $(this).attr('name');
