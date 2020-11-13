@@ -450,9 +450,9 @@ io.of((nsp, query, next) => {
                 let response = {}
                 for(let i = 1; i <=2; i++){
                     if(teams_answers[i]){
-                        response[`IDanswerTeam${i}`] = teams_answers[i]['answer_id']
-                        response[`Team${i}ValueAnswer`] = teams_answers[i]['answer']
-                        response[`Team${i}Name`] = teams_answers[i]['name']
+                        response[`IDanswerTeam${i}`] = teams_answers[i - 1]['answer_id']
+                        response[`Team${i}ValueAnswer`] = teams_answers[i - 1]['answer']
+                        response[`Team${i}Name`] = teams_answers[i - 1]['name']
                     }else{
                         response[`IDanswerTeam${i}`] = 0
                         response[`Team${i}ValueAnswer`] = "_____Nu a raspuns!_____"
