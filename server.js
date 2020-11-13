@@ -520,7 +520,7 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
     }
     //get list of teams parsed as obtions for a selector
     GetTeamsList().then(teams =>{
-        res.render('admin_room.ejs', {namespace: nsp, pid: user.id, teams:teams, role: user.role})
+        res.render('admin_room.ejs', {namespace: nsp, pid: user.id, teams:teams, role: user.role, name:user.full_name})
     })
 })
 
