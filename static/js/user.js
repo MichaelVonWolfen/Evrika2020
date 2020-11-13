@@ -31,15 +31,15 @@ jQuery(function() {
 		console.log(king)
 		console.log(msg.kings[0] == king)
 
+		$('#question').text(msg.question)
+		for(let i = 0; i<4; i++){
+			$(`#button${i}`).attr('name',msg.answers[i].name);
+			$(`#button${i}`).text(msg.answers[i].text);
+		}
+
 		if(king == msg.kings[0] || king == msg.kings[1]) {
 
 			response_sent = 0;
-
-			$('#question').text(msg.question)
-			for(let i = 0; i<4; i++){
-				$(`#button${i}`).attr('name',msg.answers[i].name);
-				$(`#button${i}`).text(msg.answers[i].text);
-			}
 
 			enable_buttons();
 
@@ -104,7 +104,7 @@ jQuery(function() {
 				}
 			}
 		} else {
-			if($('.selected').attr('value') == msg.IDanswerTeam1) {
+			if($('.selected').attr('name') == msg.IDanswerTeam1) {
 				select_other_answer(msg.IDanswerTeam2)
 			} else {
 				select_other_answer(msg.IDanswerTeam1)
