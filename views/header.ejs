@@ -20,8 +20,13 @@
     
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href='css/navbar.css'/>
     
-    <link type="text/css" rel="stylesheet" href='<%= AditionalCSS %>'/>
+    <% if(AditionalCSS === ""){ %>
+        <link type="text/css" rel="stylesheet" href='css/evrika.css'/>
+    <%}else{%>
+        <link type="text/css" rel="stylesheet" href='<%= AditionalCSS %>'/>
+    <%}%>
     <script src="./js/evrika.js"></script>
     <%- include('../views/navbar.ejs'); %>
 </head>
