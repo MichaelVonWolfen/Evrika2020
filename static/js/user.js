@@ -38,13 +38,13 @@ jQuery(function() {
 			// console.log(msg.answers[i])
 		}
 
+		refresh_buttons();
+
 		if(king == msg.kings[0] || king == msg.kings[1]) {
 
 			response_sent = 0;
 
 			enable_buttons();
-
-			refresh_buttons();
 
 			procent=100;
 
@@ -128,16 +128,17 @@ jQuery(function() {
 		$('.selected').removeClass('selected');
 		$('.bothSelected').removeClass('bothSelected');
 		$('.correctAnswer').removeClass('correctAnswer');
+		$('.team2Selected').removeClass('team2Selected');
 
 	}
 
 	function select_other_answer(answerID) {
-
-		if($(`#button${i}`).attr('name') == answerID) {
-			$(`#button${i}`).removeClass('selected')
-			$(`#button${i}`).addClass('team2Selected')
+		for(let i = 0; i < 4; i++) {
+			if($(`#button${i}`).attr('name') == answerID) {
+				$(`#button${i}`).removeClass('selected')
+				$(`#button${i}`).addClass('team2Selected')
+			}
 		}
-
 	}
 
 	function select_button(button) {
