@@ -446,13 +446,18 @@ io.of((nsp, query, next) => {
                             from active_namespaces an join users_active_namespaces uan on an.id = uan.active_namespace_id
                             join teams t on uan.team_id = t.id join answers_recieved ar on t.id = ar.team_id join answers a on a.id = ar.answer_id
                             where an.namespace_identifier like ? and ar.question_id = ?`, [msg.namespace, msg.question_id])
-                let response = {
-                                IDanswerTeam1: teams_answers[0]['answer_id'],
-                                Team1ValueAnswer: teams_answers[0]['answer'],
-                                Team1Name: teams_answers[0]['name'],
-                                IDanswerTeam2: teams_answers[1]['answer_id'],
-                                Team2ValueAnswer: teams_answers[1]['answer'],
-                                Team2Name: teams_answers[1]['name']
+                
+                let response = {}
+                for(let i = 1; i <=2; i++){
+                    if(teams_answers[i]){
+                        response[`IDanswerTeam${i}`] = teams_answers[i]['answer_id']
+                        response[`Team${i}ValueAnswer`] = teams_answers[i]['answer']
+                        response[`Team${i}Name`] = teams_answers[i]['name']
+                    }else{
+                        response[`IDanswerTeam${i}`] = 0
+                        response[`Team${i}ValueAnswer`] = "_____Nu a raspuns!_____"
+                        response[`Team${i}Name`] = "__Uncknown__"
+                    }
                 }
                 let [correctAnswer] = await promisePool.query(`select id, answer from answers where question_id = ? and is_correct = 1`, [msg.question_id])
                 response['answer_correctID'] = correctAnswer[0]['id']
