@@ -150,3 +150,22 @@ input:focus{
     width: 150px!important;
     height: auto!important;
 }
+.btn-large-admin{
+    margin: 0;
+}
+.functionality{
+    background: transparent linear-gradient(324deg, #4A3CDB 0%, #E7176A 77%, #FF0A6C 100%) 0% 0% no-repeat padding-box;
+}
+.functionality:disabled{
+    background: gray
+}
+.bold{
+    font-weight: bolder;
+    font-size: 16pt;
+}
+.spaced{
+    margin: 5px 0 0 0 !important;
+}
+.font-small{
+    font-size: 12pt;
+}
