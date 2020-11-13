@@ -1,22 +1,30 @@
 
 <!doctype html>
     <html>
-git status        <%- include('header', {pagename: 'Admin Evrika 2020', AditionalCSS: "css/evrika.css"}); -%>
+<%- include('header', {pagename: 'Admin Evrika 2020', AditionalCSS: "css/evrika.css"}); -%>
 
   <body>
         <h1 id = "namespace"><%=namespace%></h1>
         <h2 id = "teams_nust_be_choosen">Alege-ti echipele mai intai</h2>
-        <select name="team1" id="team1">
-            <% teams.forEach(function(team){ %>
-                <option value="<%=team.id %>"><%= team.name %></option>
-            <% }) %>
-        </select>
+        <div class="input-field col s5">
+            <select name="team1" id="team1">
+                <option value="" disabled selected>Choose your option</option>
+                <% teams.forEach(function(team){ %>
+                    <option value="<%=team.id %>"><%= team.name %></option>
+                <% }) %>
+            </select>
+            <label>Echipa 1</label>
+        </div>
         <button id="teams_choosen">Confirm</button>
-        <select name="team2" id="team2">
-            <% teams.forEach(function(team){ %>
-                <option value="<%=team.id %>"><%= team.name %></option>
-            <% }) %>
-        </select>
+        <div class="input-field col s5">
+            <select name="team1" id="team1">
+                <option value="" disabled selected>Choose your option</option>
+                <% teams.forEach(function(team){ %>
+                    <option value="<%=team.id %>"><%= team.name %></option>
+                <% }) %>
+            </select>
+            <label>Echipa 2</label>
+        </div>
         <div id="question">
             <h2>
                 Intrebarea apare aici

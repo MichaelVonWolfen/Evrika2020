@@ -12,8 +12,8 @@ jQuery(function() {
     "history", "geo", "romanian", "music", "sport" ];
     
     $('document').ready(function(){
-        
         socket.emit('get_namespace_load_status', $('#namespace').text());
+        $('select').formSelect();
     })
     function query(data){
         return {
