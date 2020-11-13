@@ -146,10 +146,21 @@ input:focus{
     width: 200px!important;
     height: auto!important;
 }
+
 .size_2{
     width: 150px!important;
     height: auto!important;
 }
+
+.error-pop-up
+{
+    background-color: white;
+    border-radius: 18px;
+    opacity: 1;
+    margin-top: 25px;
+    color: red; 
+}
+  
 .btn-large-admin{
     margin: 0;
 }

@@ -34,7 +34,6 @@ body {
     line-height: 70px;
     height: 70px;
     margin-bottom: 20px !important;
-
 }
 
 /* #submit {
@@ -301,4 +300,63 @@ body {
     .qNumber2 h1 {
         margin-bottom: 10px;
     }
+}
+
+.logo-categorie {
+    margin-top: 5px;
+    width: 60px;
+    height: 60px;
+    background-color: red;
+    border-radius: 5px;
+    float: left;
+}
+
+.istorie-color {
+    background: transparent linear-gradient(258deg, #F7971E 0%, #F89B1C 48%, #FFD200 100%) 0% 0% no-repeat padding-box;
+}
+
+.geografie-color {
+    background: transparent linear-gradient(145deg, #68FFD3 0%, #45D2BF 52%, #03C4C4 100%) 0% 0% no-repeat padding-box;
+}
+
+.stiinte-color {
+    background: transparent linear-gradient(141deg, #FCF717 0%, #F2E751 33%, #45C319 100%) 0% 0% no-repeat padding-box;
+}
+
+.lro-color {
+    background: transparent linear-gradient(131deg, #FFCF38 0%, #FFCF38 32%, #FF2525 100%) 0% 0% no-repeat padding-box;
+}
+
+.citate-color {
+    background: transparent linear-gradient(138deg, #FFE924 0%, #FFCF38 25%, #9916DB 100%) 0% 0% no-repeat padding-box;
+}
+
+.fun-color {
+    background: transparent linear-gradient(147deg, #F9C449 0%, #F8705B 37%, #F74065 57%, #EA1377 100%) 0% 0% no-repeat padding-box;
+}
+
+.social-color {
+    background: transparent linear-gradient(324deg, #4A3CDB 0%, #E7176A 77%, #FF0A6C 100%) 0% 0% no-repeat padding-box;
+}
+
+.filme-color {
+    background: transparent linear-gradient(139deg, #F5BBD0 0%, #F587AF 31%, #F34886 68%, #D30681 100%) 0% 0% no-repeat padding-box;    
+}
+
+.muzica-color {
+    background: transparent linear-gradient(140deg, #F26C87 0%, #E54997 38%, #855EDE 100%) 0% 0% no-repeat padding-box;
+}
+
+.sport-color {
+    background: transparent linear-gradient(135deg, #21D4FD 0%, #21D4FD 22%, #B721FF 100%) 0% 0% no-repeat padding-box;
+}
+
+.btn:disabled
+{
+    box-shadow: 0px 1px 10px #32063f6e;
+}
+
+.card.large
+{
+    border-radius: 20px;
 }

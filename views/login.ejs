@@ -27,6 +27,12 @@
                                 <input id="password" type="password" name="password" class="validate" autocomplete="off" required>
                                 <label for="password"><i class="fas fa-lock icon-move"></i>&nbsp;Password</label>
                                 
+                                <div class="error-pop-up flow-text">
+                                  <% if(messages.error) {%>
+                                    <%= messages.error %>
+                                  <%}%>
+                                </div>
+                                
                               </div>
                             </div>
                           
@@ -47,10 +53,6 @@
       </div>
     </div>
   </div>
-
-    <% if(messages.error) {%>
-        <%= messages.error %>
-    <%}%>
 
       <!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="js/materialize.min.js"></script>
