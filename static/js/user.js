@@ -87,6 +87,7 @@ jQuery(function() {
 	})
 
 	socket.on('allAnswers', msg => {
+
 		console.log(msg)
 
 		for(let i = 0; i<4; i++){
@@ -94,7 +95,7 @@ jQuery(function() {
 				$(`#button${i}`).addClass('correctAnswer')
 			}
 		}
-
+		
 		if(msg.IDanswerTeam1 == msg.IDanswerTeam2) {
 			console.log('here')
 			console.log(msg.IDanswerTeam1)
@@ -105,11 +106,8 @@ jQuery(function() {
 				}
 			}
 		} else {
-			if($('.selected').attr('name') == msg.IDanswerTeam1) {
-				select_other_answer(msg.IDanswerTeam2)
-			} else {
-				select_other_answer(msg.IDanswerTeam1)
-			}
+				select_first_team(msg.IDanswerTeam1)
+				select_second_team(msg.IDanswerTeam2)
 		}
 	})
 
@@ -132,11 +130,21 @@ jQuery(function() {
 
 	}
 
-	function select_other_answer(answerID) {
+	function select_second_team(answerID) {
 		for(let i = 0; i < 4; i++) {
 			if($(`#button${i}`).attr('name') == answerID) {
 				$(`#button${i}`).removeClass('selected')
 				$(`#button${i}`).addClass('team2Selected')
+				$(`#button${i}`).append(' -> Team 2');
+			}
+		}
+	}
+
+	function select_first_team(answerID) {
+		for(let i = 0; i < 4; i++) {
+			if($(`#button${i}`).attr('name') == answerID) {
+				$(`#button${i}`).addClass('selected')
+				$(`#button${i}`).append(' -> Team 1');
 			}
 		}
 	}
