@@ -534,7 +534,7 @@ app.get('/404', async (req,res)=>{
         const user = await req.user
         rol = user.role
     }
-    res.render(__dirname + '/' + 'views' +'/' + "404.ejs", {role: user.role})
+    res.render(__dirname + '/' + 'views' +'/' + "404.ejs", {role: rol})
 })
 app.get('*', function(req, res){
     res.redirect('/404')
