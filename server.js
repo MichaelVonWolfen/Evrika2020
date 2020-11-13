@@ -455,7 +455,7 @@ io.of((nsp, query, next) => {
                         response[`Team${i}ValueAnswer`] = teams_answers[i - 1]['answer']
                         response[`Team${i}Name`] = teams_answers[i - 1]['name']
                     }else{
-                        response[`IDanswerTeam${i}`] = 0
+                        response[`IDanswerTeam${i}`] = -1
                         response[`Team${i}ValueAnswer`] = "_____Nu a raspuns!_____"
                         response[`Team${i}Name`] = "__Uncknown__"
                     }
