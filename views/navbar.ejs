@@ -1,6 +1,66 @@
-<nav>
+<% if(role == 'ROLE_USER') { %>
+  <nav>
     <div class="nav-wrapper">
-      <a href="evrika.lsacbucuresti.ro" id="logoID" class="brand-logo logo-position"><img class="logo" src="./imagini//logo_Evrika.svg"><strong>EVRIKA!</strong></a>
+      <a href="https://finalaevrika.lsacbucuresti.ro/" id="logoID" class="brand-logo logo-position"><img class="logo" src="./imagini//logo_Evrika.svg"><strong>EVRIKA!</strong></a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/home">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/partners">Partners</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="/home">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/partners">Partners</a></li>
+  </ul> 
+<% } else if(role == 'ROLE_ADMIN') { %>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="https://finalaevrika.lsacbucuresti.ro/" id="logoID" class="brand-logo logo-position"><img class="logo" src="./imagini//logo_Evrika.svg"><strong>EVRIKA!</strong></a>
+      <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/home">Home</a></li>
+        <li><a href="/about">About</a></li>
+        <li><a href="/partners">Partners</a></li>
+        <li><a href="/admin">Start Runda</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <ul class="sidenav" id="mobile-demo">
+    <li><a href="/home">Home</a></li>
+    <li><a href="/about">About</a></li>
+    <li><a href="/partners">Partners</a></li>
+    <li><a href="/admin">Start Runda</a></li>
+  </ul> 
+<% } else if(role == 'ROLE_MULTIMEDIA') { %>
+    <nav>
+      <div class="nav-wrapper">
+        <a href="https://finalaevrika.lsacbucuresti.ro/" id="logoID" class="brand-logo logo-position"><img class="logo" src="./imagini//logo_Evrika.svg"><strong>EVRIKA!</strong></a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
+        <ul class="right hide-on-med-and-down">
+          <li><a href="/home">Home</a></li>
+          <li><a href="/about">About</a></li>
+          <li><a href="/partners">Partners</a></li>
+          <li><a href="/">UN TEXTbox trebuie pus aici</a></li>
+        </ul>
+      </div>
+    </nav>
+  
+    <ul class="sidenav" id="mobile-demo">
+      <li><a href="/home">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/partners">Partners</a></li>          
+      <li><a href="/">UN TEXTbox trebuie pus aici</a></li>
+
+    </ul> 
+<% } else{ %>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="https://finalaevrika.lsacbucuresti.ro/" id="logoID" class="brand-logo logo-position"><img class="logo" src="./imagini//logo_Evrika.svg"><strong>EVRIKA!</strong></a>
       <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="fas fa-bars"></i></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="/home">Home</a></li>
@@ -17,3 +77,4 @@
     <li><a href="/partners">Partners</a></li>
     <li><a href="/login">Login</a></li>
   </ul> 
+<% } %>

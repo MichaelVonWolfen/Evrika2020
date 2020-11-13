@@ -52,30 +52,50 @@ app.use(methodOverride('_method'))
 
 app.get('/',checkAuthenticated, async (req, res) => {
     const user = await req.user
-    res.render('index.ejs', {name: user.full_name})
+    res.render('index.ejs', {name: user.full_name, role:user.role})
     // console.log(user)
 })
 
 app.get('/login',checkNotAuthenticated, (req, res) => {
-    res.render('login.ejs')
+    res.render('login.ejs', {role: 'ROLE_DEFAULT'})
 })
 app.post('/login', passport.authenticate('local',{
     successRedirect:'/',
     failureRedirect:'/login',
     failureFlash: true
 }))
-app.get('/about', (req, res) => {
-    res.render('about.ejs')
+app.get('/about', async (req, res) => {
+    let rol = 'ROLE_DEFAULT'
+    if(req.isAuthenticated()){
+        const user = await req.user
+        rol = user.role
+    }
+    res.render('about.ejs', {role:rol})
 })
-app.get('/home', (req, res) => {
-    res.render('home.ejs')
+app.get('/home', async (req, res) => {
+    let rol = 'ROLE_DEFAULT'
+    if(req.isAuthenticated()){
+        const user = await req.user
+        rol = user.role
+    }
+    res.render('home.ejs', {role:rol})
 })
-app.get('/partners', (req, res) => {
-    res.render('partners.ejs')
+app.get('/partners', async (req, res) => {
+    let rol = 'ROLE_DEFAULT'
+    if(req.isAuthenticated()){
+        const user = await req.user
+        rol = user.role
+    }
+    res.render('partners.ejs', {role:rol})
 })
-app.get('/register',checkNotAuthenticated, (req, res) => {
-    res.render('register.ejs', {error:""})
-})
+// app.get('/register',checkNotAuthenticated, async (req, res) => {
+//     let rol = 'ROLE_DEFAULT'
+//     if(req.isAuthenticated()){
+//         const user = await req.user
+//         rol = user.role
+//     }
+//     res.render('register.ejs', {error:""})
+// })
 app.post('/register', async (req, res) => {
     try{
         //TODO: Check all the inputs to have text
@@ -476,10 +496,10 @@ app.get('/user', checkAuthenticated, namespaceExistsAndAllowed, async (req, res)
 
 
     if(user.role !== 'ROLE_USER' && user.role !== 'ROLE_MULTIMEDIA'){
-        res.redirect('/')
+        res.redirect('/', {role: user.role})
     }
     else{
-        res.render('user_room.ejs',{user: user.full_name, namespace:nsp, pid: user.id})
+        res.render('user_room.ejs',{user: user.full_name, namespace:nsp, pid: user.id, role: user.role})
     }
 })
 app.get('/admin', checkAuthenticated, async (req, res) => {
@@ -500,7 +520,7 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
     }
     //get list of teams parsed as obtions for a selector
     GetTeamsList().then(teams =>{
-        res.render('admin_room.ejs', {namespace: nsp, pid: user.id, teams:teams})
+        res.render('admin_room.ejs', {namespace: nsp, pid: user.id, teams:teams, role: user.role})
     })
 })
 
@@ -508,8 +528,13 @@ app.get('/admin', checkAuthenticated, async (req, res) => {
 //
 //
 // MUST be placed always at the end
-app.get('/404', (req,res)=>{
-    res.render(__dirname + '/' + 'views' +'/' + "404.ejs")
+app.get('/404', async (req,res)=>{
+    let rol = 'ROLE_DEFAULT'
+    if(req.isAuthenticated()){
+        const user = await req.user
+        rol = user.role
+    }
+    res.render(__dirname + '/' + 'views' +'/' + "404.ejs", {role: user.role})
 })
 app.get('*', function(req, res){
     res.redirect('/404')
