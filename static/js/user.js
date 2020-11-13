@@ -132,9 +132,11 @@ jQuery(function() {
 
 	function select_other_answer(answerID) {
 
-		if($(`#button${i}`).attr('name') == answerID) {
-			$(`#button${i}`).removeClass('selected')
-			$(`#button${i}`).addClass('team2Selected')
+		for(i = 0; i < 4; i++) {
+			if($(`#button${i}`).attr('name') == answerID) {
+				$(`#button${i}`).removeClass('selected')
+				$(`#button${i}`).addClass('team2Selected')
+			}
 		}
 
 	}
