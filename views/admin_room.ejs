@@ -6,8 +6,9 @@
   <body>
       <div class="container">
         <div class="row center-align">
-            <h3 id = "namespace"><%=namespace%></h3>
+            <h2><%=name%></h2>
             <h3 id = "teams_nust_be_choosen">Alege-ti echipele mai intai</h3>
+            <h6 id = "namespace" hidden><%=namespace%></h6>
         </div>
         <div class="row">
             <div class="input-field col s12 m5">
@@ -42,9 +43,9 @@
                         <span class="card-title">Echipa 1</span>
                         <p id="teamid_1" class="purple-text text-darken-4 bold">Team Name</p>
                         <p>Member 1:</p>
-                        <span id="member_11" name = "4" class="bold font-small spaced">Teammate1</span>&nbsp;<i class="fas fa-crown purple-text text-darken-4"></i>
+                        <span id="member_11" name = "4" class="bold font-small spaced">Teammate1</span>&nbsp;<i id="icon_11" class="fas fa-crown purple-text text-darken-4 inv"></i>
                         <p>Member 2:</p>
-                        <span id="member_12" name = "4" class="bold font-small spaced">Teammate2</span>&nbsp;<i class="fas fa-crown purple-text text-darken-4"></i>
+                        <span id="member_12" name = "4" class="bold font-small spaced">Teammate2</span>&nbsp;<i id="icon_12" class="fas fa-crown purple-text text-darken-4 inv"></i>
                         <p>Punctaj total:</p>
                         <input type="number" id="scoreTeam1" name="quantity" min="0" max="30" class="center-align">
                     </div>
@@ -67,9 +68,9 @@
                         <span class="card-title">Echipa 2</span>
                         <p id="teamid_2" class="purple-text text-darken-4 bold">Team Name</p>
                         <p>Member 1:</p>
-                        <span id="member_21" name = "4" class="bold font-small spaced">Teammate1</span>&nbsp;<i class="fas fa-crown purple-text text-darken-4" hidden></i>
+                        <span id="member_21" name = "4" class="bold font-small spaced">Teammate1</span>&nbsp;<i id="icon_21" class="fas fa-crown purple-text text-darken-4 inv"></i>
                         <p>Member 2:</p>
-                        <span id="member_22" name = "4" class="bold font-small spaced">Teammate2</span>&nbsp;<i class="fas fa-crown purple-text text-darken-4"></i>
+                        <span id="member_22" name = "4" class="bold font-small spaced">Teammate2</span>&nbsp;<i id="icon_22" class="fas fa-crown purple-text text-darken-4 inv"></i>
                         <p>Punctaj total:</p>
                         <input type="number" id="scoreTeam2" name="quantity" min="0" max="30" class="center-align">
                     </div>
@@ -82,26 +83,19 @@
                 <!--        <input type="submit" value="Obtine Intrebare" id = 'question' >-->
                 <div class="row">
                     <button id="nature" class = "col s12 m5 btn-large btn-large-admin" disabled >Stiinte ale naturii</button>
-                    <div class="col s12 m2"></div>
-                    <button id="quotes" class = "col s12 m5 btn-large btn-large-admin" disabled >Citate celebre</button>
+                    <button id="quotes" class = "col offset-m2 s12 m5 btn-large btn-large-admin" disabled >Citate celebre</button>
                     <button id="social" class = "col s12 m5 btn-large btn-large-admin" disabled >Social Media</button>
-                    <div class="col s12 m2"></div>
-                    <button id="movies" class = "col s12 m5 btn-large btn-large-admin" disabled >Filme si seriale</button>
+                    <button id="movies" class = "col offset-m2 s12 m5 btn-large btn-large-admin" disabled >Filme si seriale</button>
                     <button id="facts" class = "col s12 m5 btn-large btn-large-admin" disabled >Fun facts</button>
-                    <div class="col s12 m2"></div>
-                    <button id="history" class = "col s12 m5 btn-large btn-large-admin" disabled >Istorie</button>
+                    <button id="history" class = "col offset-m2 s12 m5 btn-large btn-large-admin" disabled >Istorie</button>
                     <button id="geo" class = "col s12 m5 btn-large btn-large-admin" disabled >Geografie</button>
-                    <div class="col s12 m2"></div>
-                    <button id="romanian" class = "col s12 m5 btn-large btn-large-admin" disabled >Limba si Literarura Romana</button>
+                    <button id="romanian" class = "col offset-m2 s12 m5 btn-large btn-large-admin" disabled >Limba si Literarura Romana</button>
                     <button id="music" class = "col s12 m5 btn-large btn-large-admin" disabled >Muzica</button>
-                    <div class="col s12 m2"></div>
-                    <button id="sport" class = "col s12 m5 btn-large btn-large-admin " disabled >Sport</button>
+                    <button id="sport" class = "col offset-m2 s12 m5 btn-large btn-large-admin " disabled >Sport</button>
                     <button id="sendToPlayers" class = "col s12 m5 btn-large btn-large-admin functionality" disabled>Send</button>
-                    <div class="col s12 m2"></div>
-                    <button id="correctAnswer" class = "col s12 m5 btn-large btn-large-admin functionality" disabled>Correct Answer</button>
+                    <button id="correctAnswer" class = "col offset-m2 s12 m5 btn-large btn-large-admin functionality" disabled>Correct Answer</button>
                     <button id="startSession" class = "col s12 m5 btn-large btn-large-admin functionality">Runda Noua</button>
-                    <div class="col s12 m2"></div>
-                    <button id="UpdateScor" class = "col s12 m5 btn-large btn-large-admin functionality">Update Scor</button>
+                    <button id="UpdateScor" class = "col offset-m2 s12 m5 btn-large btn-large-admin functionality">Update Scor</button>
                 </div>
                 <script src="js/admin.js"></script>
         </div>

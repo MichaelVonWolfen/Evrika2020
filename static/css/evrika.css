@@ -159,6 +159,10 @@ input:focus{
 .functionality:disabled{
     background: gray
 }
+.btn-large-admin:disabled{
+    background: gray;
+    color: white;
+}
 .bold{
     font-weight: bolder;
     font-size: 16pt;
@@ -168,4 +172,7 @@ input:focus{
 }
 .font-small{
     font-size: 12pt;
+}
+i.inv{
+    visibility: hidden;
 }

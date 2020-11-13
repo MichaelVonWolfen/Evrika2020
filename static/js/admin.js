@@ -1,7 +1,7 @@
 jQuery(function() {
     const socket = io('/' +$('#namespace').text(), 
     {
-        query: {
+        query: {    
             admin: true
         }
     });
@@ -87,21 +87,29 @@ jQuery(function() {
         king_team1 = $(this).attr('name');
         $(this).addClass('king');
         $('#member_12').removeClass('king');
+        $('#icon_11').removeClass('inv');
+        $('#icon_12').addClass('inv');
     });
     $('#member_12').click(function(){
         king_team1 = $(this).attr('name');
         $(this).addClass('king');
         $('#member_11').removeClass('king');
+        $('#icon_12').removeClass('inv');
+        $('#icon_11').addClass('inv');
     });
     $('#member_21').click(function(){
         king_team2 = $(this).attr('name');
         $(this).addClass('king');
         $('#member_22').removeClass('king');
+        $('#icon_21').removeClass('inv');
+        $('#icon_22').addClass('inv');
     });
     $('#member_22').click(function(){
         king_team2 = $(this).attr('name');
         $(this).addClass('king');
         $('#member_21').removeClass('king');
+        $('#icon_22').removeClass('inv');
+        $('#icon_21').addClass('inv');
     });
     $('#UpdateScor').click(()=>{
         let scort1 = $('#scoreTeam1').val()
