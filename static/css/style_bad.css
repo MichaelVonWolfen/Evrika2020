@@ -177,7 +177,7 @@ body {
     background-color: #C49FCA;
 }
 .king{
-    color:red
+    color:#4a148c 
 }
 @media only screen and (max-width: 767px) {
     /* body {

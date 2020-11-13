@@ -1,7 +1,7 @@
 jQuery(function() {
     const socket = io('/' +$('#namespace').text(), 
     {
-        query: {
+        query: {    
             admin: true
         }
     });
@@ -12,8 +12,8 @@ jQuery(function() {
     "history", "geo", "romanian", "music", "sport" ];
     
     $('document').ready(function(){
-        
         socket.emit('get_namespace_load_status', $('#namespace').text());
+        $('select').formSelect();
     })
     function query(data){
         return {
@@ -25,12 +25,14 @@ jQuery(function() {
     $('button').click(function(){
         let type = categories.indexOf($(this).attr('id'));
         if(type !== -1){
-            socket.emit('question',{
-                id: type + 1,
-                id_1: king_team1,
-                id_2: king_team2
-            })
-            $(this).prop('disabled', true);
+            if(king_team1 && king_team2){
+                socket.emit('question',{
+                    id: type + 1,
+                    id_1: king_team1,
+                    id_2: king_team2
+                })
+                $(this).prop('disabled', true);
+            }else alert('Trebuie alese persoanele care pot sa raspunda la intrebari.')
         }
     });
     $('#teams_choosen').click(function(){
@@ -48,37 +50,66 @@ jQuery(function() {
         });
         
     });
+    socket.on('allAnswers', (msg)=>{
+        // console.log(msg)
+        let IDanswerTeam1 = msg.IDanswerTeam1
+        let IDanswerTeam2 = msg.IDanswerTeam2
+        let Team1Name = msg.Team1Name
+        let Team1ValueAnswer = msg.Team1ValueAnswer
+        let Team2Name = msg.Team2Name
+        let Team2ValueAnswer = msg.Team2ValueAnswer
+        let answer_correctID = msg.answer_correctID
+        let answer_correctValue = msg.answer_correctValue
+        $('#P-correctAnswer').empty();
+        $('#P-correctAnswer').append(`<p>Echipa ${Team1Name} a raspuns: ${Team1ValueAnswer}</p>`)
+        $('#P-correctAnswer').append(`<p>Echipa ${Team2Name} a raspuns: ${Team2ValueAnswer}</p>`)
+        $('#P-correctAnswer').append(`<p>Raspunsul corect este: ${answer_correctValue}</p>`)
+    })
     $('#sendToPlayers').click(function(){
         socket.emit('toPlayers', query(idQuestion));
         $('#sendToPlayers').prop('disabled', true);
         $('#correctAnswer').prop('disabled', false);
     });
     $('#correctAnswer').click(function(){
-        socket.emit('correctAnswer', '');
+        socket.emit('correctAnswer', {
+                                        namespace: $('#namespace').text(),
+                                        question_id:idQuestion
+                                    });
     });
     $('#startSession').click(function(){
-        socket.emit("newSession", $('#namespace').text());
-        location.reload()
+        let r = confirm("Te vei deconecta de la camera curenta.\n Esti sigur\\a?");
+        if(r){
+            socket.emit("newSession", $('#namespace').text());
+            location.reload()
+        }
     });
     $('#member_11').click(function(){
         king_team1 = $(this).attr('name');
         $(this).addClass('king');
         $('#member_12').removeClass('king');
+        $('#icon_11').removeClass('inv');
+        $('#icon_12').addClass('inv');
     });
     $('#member_12').click(function(){
         king_team1 = $(this).attr('name');
         $(this).addClass('king');
         $('#member_11').removeClass('king');
+        $('#icon_12').removeClass('inv');
+        $('#icon_11').addClass('inv');
     });
     $('#member_21').click(function(){
         king_team2 = $(this).attr('name');
         $(this).addClass('king');
         $('#member_22').removeClass('king');
+        $('#icon_21').removeClass('inv');
+        $('#icon_22').addClass('inv');
     });
     $('#member_22').click(function(){
         king_team2 = $(this).attr('name');
         $(this).addClass('king');
         $('#member_21').removeClass('king');
+        $('#icon_22').removeClass('inv');
+        $('#icon_21').addClass('inv');
     });
     $('#UpdateScor').click(()=>{
         let scort1 = $('#scoreTeam1').val()
@@ -100,11 +131,18 @@ jQuery(function() {
             }
         }
     })
+        
     
     
     socket.on('rasp',function(msg){
         idQuestion = msg['id'];
-        $('#question').text(msg['question']);
+        let answer_array = msg['answers']
+        let answer_text = ""
+        answer_array.forEach(answer => {
+            answer_text += `|   ${answer}   |`
+        });
+        $('#question').empty();
+        $('#question').append(`<h2>${msg['question']}</h2><h3>${answer_text}</h3>`);
         $('#sendToPlayers').prop('disabled', false);
         $('#correctAnswer').prop('disabled', true);
         
@@ -136,6 +174,10 @@ jQuery(function() {
             $('#team1').prop('disabled', true);
             $('#team2').prop('disabled', true);
             $('#teams_choosen').prop('disabled', true);
+            $('#teams_nust_be_choosen').text('');
+            categories.forEach(categorie => {
+                $(`#${categorie}`).attr('disabled', false);
+            });
         }
     })
 });

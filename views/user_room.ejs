@@ -1,14 +1,6 @@
 <!doctype html>
 <html>
-<head>
-    <title>Socket.IO chat</title>
-    <link href="css/user_room.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
-    <link rel="stylesheet" type="text/css" href="css/materialize.min.css" />
-    <script src="js/materialize.min.js"></script>
-    <script src="https://kit.fontawesome.com/a85a75ed5d.js" crossorigin="anonymous"></script>
-</head>
+    <%- include('header', {pagename: 'Evrika 2020 - User', AditionalCSS: "css/user_room.css"}); -%>
 <body>
 <div class="container">
     <div class="row">
@@ -62,13 +54,65 @@
                         </div>
                         
                     </div>
-                    <button id="submit" class="btn waves-effect waves-light center" type="submit" name="action">
-                        <i class="material-icons right">Raspunde</i>
-                    </button>
+                    <div class="centerBtn">
+                        <button id="submit" class="btn-large responseBtn" type="submit" name="action">Raspunde</button>
+                    </div>
                 </div>
         </div>
     </div>
 </div>
+
+<div class="row">
+    <div class="row">
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Istorie
+            </button>
+
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Geografie
+            </button>
+
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Stiinte ale Naturii
+            </button>
+    </div>
+
+    <div class="row">
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Limba si literatura romana
+            </button>
+
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Citate Celebre
+            </button>
+
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Fun Facts
+            </button>
+    </div>
+
+    <div class="row">
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Social media
+            </button>
+
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Filme si Seriale
+            </button>
+
+            <button disabled class='btn btn-large white black-text col s12 m12 l12 xl4'>
+                Muzica
+            </button>
+     </div>
+
+    <div class="row">
+            <button disabled class='btn btn-large white black-text offset-xl4 col s12 m12 l12 xl4'>
+                Sport
+            </button>
+    </div>
+
+</div>
+
     
 <!-- <input type="hidden" value="<%= namespace %>" id="namespace">
 <input type="hidden" value="<%= pid %>" id="pid">
