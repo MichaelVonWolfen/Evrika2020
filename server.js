@@ -221,6 +221,7 @@ function ExtractUser(res){
 }
 async function get_Question(msg) {
     try{
+        console.log("Ba, acolo urmeaza chestia asta xd")
         console.log(msg)
         // create the pool
         // now get a Promise wrapped instance of that pool
@@ -240,7 +241,7 @@ async function get_Question(msg) {
                                 AND question_type = ?
                                 order by RAND()
                                 limit 1;`, [category, t1, t2, category]);
-        // console.log(quest);
+        console.log(quest);
         let id = quest[0]['id']
         let question = quest[0]['question']
         let played_times = quest[0]['times_played']
