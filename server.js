@@ -1,6 +1,6 @@
-if(process.env.['NODE_ENV'] !== 'prod'){
+// if(process.env.NODE_ENV !== 'prod'){
     require('dotenv').config()
-}
+// }
 const port = 3000;
 const total_time_allowed = 15; //Time allowed to respond to a question
 const categories_total = 10; //Number of total questions
@@ -88,16 +88,17 @@ app.get('/partners', async (req, res) => {
     }
     res.render('partners.ejs', {role:rol})
 })
-// app.get('/register',checkNotAuthenticated, async (req, res) => {
-//     let rol = 'ROLE_DEFAULT'
-//     if(req.isAuthenticated()){
-//         const user = await req.user
-//         rol = user.role
-//     }
-//     res.render('register.ejs', {error:""})
-// })
+app.get('/register',checkNotAuthenticated, async (req, res) => {
+    let rol = 'ROLE_DEFAULT'
+    if(req.isAuthenticated()){
+        const user = await req.user
+        rol = user.role
+    }
+    res.render('register.ejs', {error:"", role:rol})
+})
 app.post('/register', async (req, res) => {
     try{
+        let rol = 'ROLE_DEFAULT'
         //TODO: Check all the inputs to have text
         let i = 0;
         const hashedPass = await bcrypt.hash(req.body.password, 10)
@@ -106,38 +107,38 @@ app.post('/register', async (req, res) => {
         const lname1 = req.body.lastName1
         const email1 = req.body.email1
         const phone1 = req.body.phone1
-        const college1 = req.body.faculty1
+        // const college1 = req.body.faculty1
         const fname2 = req.body.firstName2
         const lname2 = req.body.lastName2
         const email2 = req.body.email2
         const phone2 = req.body.phone2
-        const college2 = req.body.faculty2
+        // const college2 = req.body.faculty2
 
         const promisePool = pool.promise();
         let [team] = await promisePool.query(`Select name from teams where name like lower(?)`, [team_name]);
         if(team[0]){
             //DONE: show error message
-            console.log('Error 1')
-            return res.render('register.ejs',{error:"Team already exists."});
+            console.error('Error: Team already exists in the DB')
+            return res.render('register.ejs',{error:"Team already exists.", role:rol});
         }
         //TODO: ADD team in the DB and the members
         let [user1] = await promisePool.query(`Select email from users where email like lower(?)`,[email1])
         let [user2] = await promisePool.query(`Select email from users where email like lower(?)`,[email2])
         if(user1[0] || user2[0]){
             console.log('Error 2')
-            return res.render('register.ejs',{error:`Email ${email} already used.`});
+            return res.render('register.ejs',{error:`Email ${email} already used.`, role:rol});
         }
         await promisePool.query(`INSERT into teams(NAME, ROLE, CREATEDAT, UPDATEDAT) 
                                 VALUES(lower(?), 'ROLE_USER', CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP());`, [team_name]);
         [team] = await promisePool.query(`Select id from teams where name like ?`, [team_name]);
 
         const id = team[0]['id'];
-        await promisePool.query(`insert into users(first_name, last_name, email, password, phone, faculty, team_id, role, createdAt, updatedAt)
-                                        values (?, ?, lower(?), ?, ?, ?, ?,
-                                        'ROLE_USER', current_timestamp, current_timestamp)`, [fname1, lname1, email1, hashedPass, phone1, college1, id]);
-        await promisePool.query(`insert into users(first_name, last_name, email, password, phone, faculty, team_id, role, createdAt, updatedAt)
-                                values (?, ?, lower(?), ?, ?, ?, ?,
-                                'ROLE_USER', current_timestamp, current_timestamp)`, [fname2, lname2, email2, hashedPass, phone2, college2, id]);
+        await promisePool.query(`insert into users(first_name, last_name, email, password, phone, team_id, role, createdAt, updatedAt)
+                                        values (?, ?, lower(?), ?, ?, ?,
+                                        'ROLE_USER', current_timestamp, current_timestamp)`, [fname1, lname1, email1, hashedPass, phone1, id]);
+        await promisePool.query(`insert into users(first_name, last_name, email, password, phone, team_id, role, createdAt, updatedAt)
+                                values (?, ?, lower(?), ?, ?, ?,
+                                'ROLE_USER', current_timestamp, current_timestamp)`, [fname2, lname2, email2, hashedPass, phone2, id]);
         res.redirect('/login');
 
     }catch (e){
@@ -184,7 +185,7 @@ async function namespaceExistsAndAllowed(req, res, next){
 async function GetUserByEmail(email){
     try {
         const [res] = await promisePool.query(`select id, concat(first_name,' ', last_name) as 'full_name', email, 
-                                                    password, phone, faculty, team_id, is_active, role, createdAt, 
+                                                    password, phone,  team_id, is_active, role, createdAt, 
                                                     updatedAt from users where email like ?;`, [email])
         let user = ExtractUser(res)
         // console.log(user)
@@ -196,7 +197,7 @@ async function GetUserByEmail(email){
 async function GetUserByID(id){
     try {
         const [res] = await promisePool.query(`select id, concat(first_name,' ', last_name) as 'full_name', email, 
-                                                    password, phone, faculty, team_id, is_active, role, createdAt, 
+                                                    password, phone,  team_id, is_active, role, createdAt, 
                                                     updatedAt  from users where id like ?;`, [id])
         let user = ExtractUser(res)
         // console.log(user)
@@ -212,7 +213,7 @@ function ExtractUser(res){
         "email":  res[0]['email'],
         "password":  res[0]['password'],
         "phone":  res[0]['phone'],
-        "faculty":  res[0]['faculty'],
+        // "faculty":  res[0]['faculty'],
         "team_id":  res[0]['team_id'],
         "is_active": res[0]['is_active'],
         "role":  res[0]['role']

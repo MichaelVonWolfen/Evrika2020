@@ -1,20 +1,20 @@
 {
   "development": {
-    "username": "root",
+    "username": "mihai",
     "password": "Salamandra#1",
     "database": "evryka_dev",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
-    "username": "root",
+    "username": "mihai",
     "password": "Salamandra#1",
     "database": "evryka_test",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
+    "username": "mihai",
     "password": "Salamandra#1",
     "database": "evryka_prod",
     "host": "127.0.0.1",

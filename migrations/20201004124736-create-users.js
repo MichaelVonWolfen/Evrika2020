@@ -28,18 +28,18 @@ module.exports = {
       phone: {
         type: Sequelize.STRING(16)
       },
-      faculty: {
-        type: Sequelize.STRING
-      },
+      // faculty: {
+      //   type: Sequelize.STRING
+      // },
       team_id: {
         type: Sequelize.INTEGER,
         references:{model: 'teams', key: 'id'}
       },
-      is_active: {
-        type: Sequelize.BOOLEAN,
-        defaultValue:0,
-        allowNull:false
-      },
+      // is_active: {
+      //   type: Sequelize.BOOLEAN,
+      //   defaultValue:0,
+      //   allowNull:false
+      // },
       role: {
         type: Sequelize.STRING
       },
