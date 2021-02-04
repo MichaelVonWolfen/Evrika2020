@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     phone: DataTypes.STRING(16),
     // faculty: DataTypes.STRING,
     team_id: DataTypes.INTEGER,
-    is_active: DataTypes.BOOLEAN,
+    // is_active: DataTypes.BOOLEAN,
     role: DataTypes.STRING
   }, {
     sequelize,
